@@ -1,0 +1,39 @@
+.title {
+    height: @size / 2;
+    padding: 0 @space 0 @space * 1.2;
+    font-size: @big;
+    margin: @space;
+    position: relative;
+    .flexLeft();
+    &.thin {
+        font-weight: normal;
+    }
+    &:before {
+        content: "";
+        top: 15%;
+        left: 0;
+        width: @space / 2;
+        height: 70%;
+        border-radius: @space / 2;
+        background-color: @orange;
+        position: absolute;
+    }
+    &.none {
+        padding-left: 0;
+    }
+    &.green {
+        &:before {
+            background-color: @green;
+        }
+    }
+    &.blue {
+        &:before {
+            background-color: @blue;
+        }
+    }
+    &.red {
+        &:before {
+            background-color: @red;
+        }
+    }
+}
