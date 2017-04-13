@@ -1,0 +1,496 @@
+/**
+ * Global Reset of all HTML Elements
+ *
+ * Resetting all of our HTML Elements ensures a smoother
+ * visual transition between browsers. If you don't believe me,
+ * try temporarily commenting out this block of code, then go
+ * and look at Mozilla versus Safari, both good browsers with
+ * a good implementation of CSS. The thing is, all browser CSS
+ * defaults are different and at the end of the day if visual
+ * consistency is what we're shooting for, then we need to
+ * make sure we're resetting all spacing elements.
+ *
+ */
+html,
+body {
+  height: 100%;
+  border: 0;
+  font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+div,
+span,
+object,
+iframe,
+img,
+table,
+caption,
+thead,
+tbody,
+tfoot,
+tr,
+tr,
+td,
+article,
+aside,
+canvas,
+details,
+figure,
+hgroup,
+menu,
+nav,
+footer,
+header,
+section,
+summary,
+mark,
+audio,
+video {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+address,
+cit,
+code,
+del,
+dfn,
+em,
+ins,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+b,
+i,
+hr,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+legend,
+label {
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+}
+article,
+aside,
+canvas,
+figure,
+figure img,
+figcaption,
+hgroup,
+footer,
+header,
+nav,
+section,
+audio,
+video {
+  display: block;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+table caption,
+table th,
+table td {
+  text-align: left;
+  vertical-align: middle;
+}
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+a img {
+  border: 0;
+}
+:focus {
+  outline: 0;
+}
+* {
+  box-sizing: border-box;
+}
+textarea {
+  resize: none;
+  appearance: none;
+}
+input {
+  appearance: none;
+}
+select {
+  appearance: none;
+  background-color: #fff;
+}
+.container {
+  width: 7.5rem;
+  max-width: 7.5rem;
+  height: 100%;
+  margin: 0 auto;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.container > .header {
+  height: 1rem;
+  font-size: 0.3rem;
+  color: #fff;
+  background-color: #66ccff;
+  display: flex;
+}
+.container > .header .left,
+.container > .header .center,
+.container > .header .right {
+  height: 100%;
+}
+.container > .header .left {
+  width: 1rem;
+  padding-left: 0.2rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.container > .header .center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container > .header .right {
+  width: 1rem;
+  padding-right: 0.2rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+}
+.container > .main {
+  flex: 1;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+.container > .main > .content {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.container > .footer {
+  height: 1rem;
+  border-top: 1px solid #dddddd;
+  background-color: #fff;
+  position: relative;
+}
+.cell-list {
+  overflow: hidden;
+  margin: 0.2rem 0;
+}
+.cell-list.has-border {
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+}
+.cell-list.card-list .card {
+  margin: 0.2rem;
+  padding: 0.2rem;
+  border: 1px solid #dddddd;
+  border-radius: 0.1rem;
+  background-color: #fff;
+  box-shadow: 0.06666667rem 0.06666667rem 0.1rem #dddddd;
+}
+.cell-list.card-list .card p {
+  display: flex;
+  align-items: flex-start;
+}
+.cell-list.card-list .card p .label {
+  width: 1rem;
+  max-width: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list.card-list .card p .text {
+  margin-left: 0.2rem;
+  flex: 1;
+}
+.cell-list.field-list .field {
+  height: 1rem;
+  border-bottom: 1px solid #dddddd;
+  font-size: 0.24rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.2rem;
+  align-items: center;
+  cursor: pointer;
+  background-color: #fff;
+}
+.cell-list.field-list .field:last-child {
+  border-bottom: none;
+}
+.cell-list.field-list .field .label {
+  width: 1rem;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list.field-list .field .label.auto {
+  width: auto;
+}
+.cell-list.field-list .field .input {
+  flex: 1;
+  padding: 0.2rem;
+  height: 100%;
+  border: none;
+  font-size: inherit;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list.field-list .field .right {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.cell-list .cell {
+  height: 1rem;
+  border-bottom: 1px solid #dddddd;
+  font-size: 0.24rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.2rem;
+  align-items: center;
+  cursor: pointer;
+  background-color: #fff;
+}
+.cell-list .cell:last-child {
+  border-bottom: none;
+}
+.cell-list .cell .label {
+  width: 1rem;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list .cell .text {
+  flex: 1;
+  padding: 0.2rem;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list .cell .right {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.title {
+  height: 0.5rem;
+  padding: 0 0.2rem 0 0.24rem;
+  font-size: 0.24rem;
+  margin: 0.2rem;
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.title.thin {
+  font-weight: normal;
+}
+.title:before {
+  content: "";
+  top: 15%;
+  left: 0;
+  width: 0.1rem;
+  height: 70%;
+  border-radius: 0.1rem;
+  background-color: #ff6600;
+  position: absolute;
+}
+.title.none {
+  padding-left: 0;
+}
+.title.green:before {
+  background-color: #9acd32;
+}
+.title.blue:before {
+  background-color: #66ccff;
+}
+.title.red:before {
+  background-color: #ff0000;
+}
+.btn {
+  height: 0.66666667rem;
+  line-height: 0.66666667rem;
+  padding: 0 0.2rem;
+  border: none;
+  border-radius: 0.1rem;
+  font-size: 0.2rem;
+  color: #656b79;
+  background-color: #fff;
+  border: 1px solid #dddddd;
+  letter-spacing: 0.05rem;
+  font-size: 0.24rem;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+}
+.btn.btn-disabled {
+  color: #bbb;
+  background-color: #eee;
+  cursor: no-drop;
+}
+.btn.not-bg {
+  background-color: #fff;
+}
+.btn.btn-small {
+  height: 0.5rem;
+  line-height: 0.5rem;
+  padding: 0 0.1rem;
+  font-size: 0.2rem;
+  letter-spacing: normal;
+}
+.btn.btn-full {
+  height: 0.75rem;
+  line-height: 0.75rem;
+  width: 94%;
+  margin: 0.2rem 3%;
+  letter-spacing: 0.1rem;
+  font-size: 0.3rem;
+}
+.btn.not-radius {
+  border-radius: 0;
+}
+.btn.btn-orange {
+  color: #fff;
+  border-color: #ff6600;
+  background-color: #ff6600;
+}
+.btn.btn-orange.btn-disabled {
+  background-color: #ffa366;
+}
+.btn.btn-orange.not-bg {
+  color: #ff6600;
+  background-color: #fff;
+}
+.btn.btn-blue {
+  color: #fff;
+  border-color: #66ccff;
+  background-color: #66ccff;
+}
+.btn.btn-blue.btn-disabled {
+  background-color: #99ddff;
+}
+.btn.btn-blue.not-bg {
+  color: #66ccff;
+  background-color: #fff;
+}
+.btn.btn-green {
+  color: #fff;
+  border-color: #9acd32;
+  background-color: #9acd32;
+}
+.btn.btn-green.btn-disabled {
+  background-color: #c2e184;
+}
+.btn.btn-green.not-bg {
+  color: #9acd32;
+  background-color: #fff;
+}
+.btn.btn-red {
+  color: #fff;
+  border-color: #ff0000;
+  background-color: #ff0000;
+}
+.btn.btn-red.btn-disabled {
+  background-color: #ff6666;
+}
+.btn.btn-red.not-bg {
+  color: #ff0000;
+  background-color: #fff;
+}
+.btn i {
+  margin-right: 0.1rem;
+  font-size: inherit;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #ddd;
+  font-size: 0.2rem;
+  font-family: "MicroSoft YaHei";
+}
+@font-face {
+  font-family: "iconfont";
+  src: url('../iconfont/iconfont.eot?t=1491995928113');
+  src: url('../iconfont/iconfont.eot?t=1491995928113#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../iconfont/iconfont.woff?t=1491995928113') format('woff'), /* chrome, firefox */ url('../iconfont/iconfont.ttf?t=1491995928113') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/ url('../iconfont/iconfont.svg?t=1491995928113#iconfont') format('svg');
+  
+  /* IE9*/
+  /* iOS 4.1- */
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: inherit;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+.link {
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  display: inherit;
+  flex-direction: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+  cursor: pointer;
+}
+.link i {
+  font-size: inherit;
+  color: inherit;
+}
+.bg-blue {
+  background-color: #66ccff;
+}
+.bg-orange {
+  background-color: #ff6600;
+}
+.bg-green {
+  background-color: #9acd32;
+}
+.bg-red {
+  background-color: #ff0000;
+}

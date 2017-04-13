@@ -1,0 +1,97 @@
+
+.cell-list {
+    overflow: hidden;
+    margin: @space 0;
+    &.has-border {
+        border-top: 1px solid @borderColor;
+        border-bottom: 1px solid @borderColor;
+    }
+    &.card-list {
+        .card {
+            margin: @space;
+            padding: @space;
+            .border();
+            border-radius: @space / 2;
+            background-color: #fff;
+            box-shadow: @space / 3 @space / 3 @space / 2 @borderColor;
+            p {
+                display: flex;
+                align-items: flex-start;
+                .label {
+                    width: @size;
+                    max-width: @size;
+                    .flexLeft();
+                }
+                .text {
+                    margin-left: @space;
+                    .f1();
+                }
+            }
+        }
+    }
+    &.field-list {
+        .field {
+            height: @size;
+            border-bottom: 1px solid @borderColor;
+            font-size: @big;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 @space;
+            align-items: center;
+            cursor: pointer;
+            background-color: #fff;
+            &:last-child {
+                border-bottom: none;
+            }
+            .label {
+                width: @size;
+                height: 100%;
+                .flexLeft();
+                &.auto {
+                    width: auto;
+                }
+            }
+            .input {
+                .f1();
+                padding: @space;
+                height: 100%;
+                border: none;
+                font-size: inherit;
+                .flexLeft();
+            }
+            .right {
+                height: 100%;
+                .flexRight();
+            }
+        }
+    }
+    .cell {
+        height: @size;
+        border-bottom: 1px solid @borderColor;
+        font-size: @big;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 @space;
+        align-items: center;
+        cursor: pointer;
+        background-color: #fff;
+        &:last-child {
+            border-bottom: none;
+        }
+        .label {
+            width: @size;
+            height: 100%;
+            .flexLeft();
+        }
+        .text {
+            .f1();
+            padding: @space;
+            height: 100%;
+            .flexLeft();
+        }
+        .right {
+            height: 100%;
+            .flexRight();
+        }
+    }
+}
