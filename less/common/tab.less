@@ -1,0 +1,125 @@
+@import "variable";
+.tab {
+    height: @size;
+    display: flex;
+    font-size: @big;
+    background-color: #fff;
+    position: relative;
+    &.blue {
+        .item {
+            &:hover,
+            &.active {
+                background-color: @blue;
+            }
+        }
+        &.border {
+            .item {
+                &:hover,
+                &.active {
+                    &:after {
+                        background-color: @blue;
+                    }
+                }
+            }
+        }
+    }
+    &.red {
+        .item {
+            &:hover,
+            &.active {
+                background-color: @red;
+            }
+        }
+        &.border {
+            .item {
+                &:hover,
+                &.active {
+                    &:after {
+                        background-color: @red;
+                    }
+                }
+            }
+        }
+    }
+    &.green {
+        .item {
+            &:hover,
+            &.active {
+                background-color: @green;
+            }
+        }
+        &.border {
+            .item {
+                &:hover,
+                &.active {
+                    &:after {
+                        background-color: @green;
+                    }
+                }
+            }
+        }
+    }
+    &.border {
+        .item {
+            &:hover,
+            &.active {
+                color: @defaultFont;
+                background-color: #fff;
+                &:after {
+                    content: "";
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    height: @space / 2;
+                    background-color: @orange;
+                    position: absolute;
+                }
+            }
+        }
+    }
+    &.tab-small {
+        height: @size * 2 / 3; 
+        font-size: @normal;
+        &.border {
+            .item {
+                &:hover,
+                &.active {
+                    &:after {
+                        height: @space / 4;
+                    }
+                }
+            }
+        }
+        .item {
+            &.has-icon {
+                flex-direction: column;
+                i {
+                    font-size: .9em;
+                }
+                p {
+                    font-size: .5em;
+                }
+            }
+        }
+    }
+    .item {
+        .f1();
+        .flexCenter();
+        position: relative;
+        &:hover,
+        &.active {
+            color: #fff;
+            background-color: @orange;
+            cursor: pointer;
+        }
+        &.has-icon {
+            flex-direction: column;
+            i {
+                font-size: 1.2em;
+            }
+            p {
+                font-size: .8em;
+            }
+        }
+    }
+}

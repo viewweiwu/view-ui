@@ -1,0 +1,95 @@
+.btn {
+  height: 0.66666667rem;
+  line-height: 0.66666667rem;
+  padding: 0 0.2rem;
+  border: none;
+  border-radius: 0.1rem;
+  font-size: 0.25rem;
+  color: #656b79;
+  background-color: #fff;
+  border: 1px solid #dddddd;
+  letter-spacing: 0.05rem;
+  font-size: 0.3rem;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+}
+.btn.btn-disabled {
+  color: #bbb;
+  background-color: #eee;
+  cursor: no-drop;
+}
+.btn.not-bg {
+  background-color: #fff;
+}
+.btn.btn-small {
+  height: 0.5rem;
+  line-height: 0.5rem;
+  padding: 0 0.1rem;
+  font-size: 0.25rem;
+  letter-spacing: normal;
+}
+.btn.btn-full {
+  height: 0.75rem;
+  line-height: 0.75rem;
+  width: 94%;
+  margin: 0.2rem 3%;
+  letter-spacing: 0.1rem;
+  font-size: 0.35rem;
+}
+.btn.not-radius {
+  border-radius: 0;
+}
+.btn.btn-orange {
+  color: #fff;
+  border-color: #ff6600;
+  background-color: #ff6600;
+}
+.btn.btn-orange.btn-disabled {
+  background-color: #ffa366;
+}
+.btn.btn-orange.not-bg {
+  color: #ff6600;
+  background-color: #fff;
+}
+.btn.btn-blue {
+  color: #fff;
+  border-color: #66ccff;
+  background-color: #66ccff;
+}
+.btn.btn-blue.btn-disabled {
+  background-color: #99ddff;
+}
+.btn.btn-blue.not-bg {
+  color: #66ccff;
+  background-color: #fff;
+}
+.btn.btn-green {
+  color: #fff;
+  border-color: #9acd32;
+  background-color: #9acd32;
+}
+.btn.btn-green.btn-disabled {
+  background-color: #c2e184;
+}
+.btn.btn-green.not-bg {
+  color: #9acd32;
+  background-color: #fff;
+}
+.btn.btn-red {
+  color: #fff;
+  border-color: #ff0000;
+  background-color: #ff0000;
+}
+.btn.btn-red.btn-disabled {
+  background-color: #ff6666;
+}
+.btn.btn-red.not-bg {
+  color: #ff0000;
+  background-color: #fff;
+}
+.btn i {
+  margin-right: 0.1rem;
+  font-size: inherit;
+}

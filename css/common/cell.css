@@ -1,0 +1,106 @@
+.cell-list {
+  overflow: hidden;
+  margin: 0.2rem 0;
+}
+.cell-list.has-border {
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+}
+.cell-list.card-list .card {
+  margin: 0.2rem;
+  padding: 0.2rem;
+  border: 1px solid #dddddd;
+  border-radius: 0.1rem;
+  background-color: #fff;
+  box-shadow: 0.06666667rem 0.06666667rem 0.1rem #dddddd;
+}
+.cell-list.card-list .card p {
+  display: flex;
+  align-items: flex-start;
+}
+.cell-list.card-list .card p .label {
+  width: 1rem;
+  max-width: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list.card-list .card p .text {
+  margin-left: 0.2rem;
+  flex: 1;
+}
+.cell-list.field-list .field {
+  height: 1rem;
+  border-bottom: 1px solid #dddddd;
+  font-size: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.2rem;
+  align-items: center;
+  cursor: pointer;
+  background-color: #fff;
+}
+.cell-list.field-list .field:last-child {
+  border-bottom: none;
+}
+.cell-list.field-list .field .label {
+  width: 1.5rem;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list.field-list .field .label.auto {
+  width: auto;
+}
+.cell-list.field-list .field .input {
+  flex: 1;
+  padding: 0.2rem;
+  height: 100%;
+  border: none;
+  font-size: inherit;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list.field-list .field .right {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.cell-list .cell {
+  height: 1rem;
+  border-bottom: 1px solid #dddddd;
+  font-size: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.2rem;
+  align-items: center;
+  cursor: pointer;
+  background-color: #fff;
+}
+.cell-list .cell:last-child {
+  border-bottom: none;
+}
+.cell-list .cell .label {
+  width: 1.5rem;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list .cell .text {
+  flex: 1;
+  padding: 0.2rem;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.cell-list .cell .right {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
