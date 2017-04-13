@@ -87,6 +87,13 @@
 .cell-list.card-list.card-list-grid.grid2 .card .image {
   height: 2.5rem;
 }
+.cell-list.card-list.card-list-grid.grid2 .card .info {
+  margin: 0.13333333rem;
+  margin-bottom: 0;
+}
+.cell-list.card-list.card-list-grid.grid2 .card .content {
+  margin: 0.13333333rem;
+}
 .cell-list.card-list.card-list-grid.grid3 {
   padding: 0 0.2rem;
   margin: 0;

@@ -13,6 +13,11 @@
 .tab.blue.border .item.active:after {
   background-color: #66ccff;
 }
+.tab.blue.not-bg .item:hover,
+.tab.blue.not-bg .item.active {
+  color: #66ccff;
+  background-color: transparent;
+}
 .tab.red .item:hover,
 .tab.red .item.active {
   background-color: #ff0000;
@@ -21,6 +26,11 @@
 .tab.red.border .item.active:after {
   background-color: #ff0000;
 }
+.tab.red.not-bg .item:hover,
+.tab.red.not-bg .item.active {
+  color: #ff0000;
+  background-color: transparent;
+}
 .tab.green .item:hover,
 .tab.green .item.active {
   background-color: #9acd32;
@@ -28,6 +38,11 @@
 .tab.green.border .item:hover:after,
 .tab.green.border .item.active:after {
   background-color: #9acd32;
+}
+.tab.green.not-bg .item:hover,
+.tab.green.not-bg .item.active {
+  color: #9acd32;
+  background-color: transparent;
 }
 .tab.border .item:hover,
 .tab.border .item.active {
@@ -43,6 +58,34 @@
   height: 0.1rem;
   background-color: #ff6600;
   position: absolute;
+}
+.tab.not-bg .item:hover,
+.tab.not-bg .item.active {
+  color: #ff6600;
+  background-color: transparent;
+}
+.tab.dark {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.tab.dark .item {
+  background-color: transparent;
+}
+.tab.dark .item:hover,
+.tab.dark .item.active {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.tab.light {
+  color: #333333;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.tab.light .item {
+  background-color: transparent;
+}
+.tab.light .item:hover,
+.tab.light .item.active {
+  color: #333333;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 .tab.tab-small {
   height: 0.66666667rem;
