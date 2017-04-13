@@ -1,12 +1,12 @@
 @import "variable";
 .cell-list {
-    overflow: hidden;
     margin: @space 0;
     &.has-border {
         border-top: 1px solid @borderColor;
         border-bottom: 1px solid @borderColor;
     }
     &.card-list {
+        margin: 0;
         .card {
             margin: @space;
             padding: @space;
@@ -25,6 +25,65 @@
                 .text {
                     margin-left: @space;
                     .f1();
+                }
+            }
+        }
+        &.card-list-grid {
+            .card {
+                padding: 0;
+                overflow: hidden;
+                .image {
+                    width: 100%;
+                }
+                .info {
+                    margin: @space;
+                    color: @grayFont;
+                }
+                .content {
+                    margin: @space;
+                }
+                .ctrls {
+                    padding: @space;
+                    border-top: 1px solid @borderColor;
+                    .flexBetween();
+                    .btn-full {
+                        width: 100%;
+                        margin: 0;
+                    }
+                }
+            }
+            &.grid2 {
+                padding: 0 @space;
+                margin: 0;
+                overflow: hidden;
+                .card {
+                    margin: @space / 2 0;
+                    float: left;
+                    width: 49%;
+                    &:nth-child(2n) {
+                        margin-left: 2%;
+                    }
+                }
+            }
+            &.grid3 {
+                padding: 0 @space;
+                margin: 0;
+                overflow: hidden;
+                .card {
+                    margin: @space / 2 0;
+                    float: left;
+                    width: 32%;
+                    margin-right: 2%;
+                    .info,
+                    .content {
+                        margin: @space / 2;
+                    }
+                    .ctrls {
+                        padding: @space / 2;
+                    }
+                    &:nth-child(3n) {
+                        margin-right: 0;
+                    }
                 }
             }
         }
@@ -62,6 +121,36 @@
             .right {
                 height: 100%;
                 .flexRight();
+            }
+        }
+    }
+    &.cell-image-text {
+        .cell {
+            height: auto;
+            padding: @space;
+            align-items: flex-start;
+            .image {
+                width: @size;
+                height: @size;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+                &.radius {
+                    .border();
+                }
+            }
+            .text {
+                padding: 0;
+                margin-left: @space;
+                flex-direction: column;
+                align-items: flex-start;
+                .header {
+                    font-weight: lighter;
+                }
+                .content {
+                    font-size: @normal;
+                }
             }
         }
     }

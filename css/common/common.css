@@ -7,6 +7,9 @@ body {
   font-size: 0.25rem;
   font-family: "MicroSoft YaHei";
 }
+img {
+  max-width: 100%;
+}
 @font-face {
   font-family: "iconfont";
   src: url('../iconfont/iconfont.eot?t=1491995928113');
@@ -48,4 +51,11 @@ body {
 }
 .bg-red {
   background-color: #ff0000;
+}
+.not-radius {
+  border-radius: 0;
+}
+.radius {
+  border-radius: 50%;
+  overflow: hidden;
 }

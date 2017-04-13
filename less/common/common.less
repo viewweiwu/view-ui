@@ -9,6 +9,10 @@ body {
     font-family: "MicroSoft YaHei";
 }
 
+img {
+    max-width: 100%;
+}
+
 @font-face {font-family: "iconfont";
     src: url('../iconfont/iconfont.eot?t=1491995928113'); /* IE9*/
     src: url('../iconfont/iconfont.eot?t=1491995928113#iefix') format('embedded-opentype'), /* IE6-IE8 */
@@ -52,4 +56,12 @@ body {
 }
 .bg-red {
     background-color: @red;
+}
+
+.not-radius {
+    border-radius: 0;
+}
+.radius {
+    border-radius: 50%;
+    overflow: hidden;
 }

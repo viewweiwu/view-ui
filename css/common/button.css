@@ -23,13 +23,6 @@
 .btn.not-bg {
   background-color: #fff;
 }
-.btn.btn-small {
-  height: 0.5rem;
-  line-height: 0.5rem;
-  padding: 0 0.1rem;
-  font-size: 0.25rem;
-  letter-spacing: normal;
-}
 .btn.btn-full {
   height: 0.75rem;
   line-height: 0.75rem;
@@ -37,6 +30,13 @@
   margin: 0.2rem 3%;
   letter-spacing: 0.1rem;
   font-size: 0.35rem;
+}
+.btn.btn-small {
+  height: 0.5rem;
+  line-height: 0.5rem;
+  padding: 0 0.1rem;
+  font-size: 0.25rem;
+  letter-spacing: normal;
 }
 .btn.not-radius {
   border-radius: 0;
