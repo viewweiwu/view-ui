@@ -135,6 +135,19 @@
 .cell-list.field-list .field:last-child {
   border-bottom: none;
 }
+.cell-list.field-list .field.textarea {
+  height: auto;
+  min-height: 1rem;
+  padding: 0.2rem;
+  align-items: flex-start;
+}
+.cell-list.field-list .field.textarea .content {
+  flex: 1;
+  height: 1.5rem;
+  padding: 0.1rem;
+  line-height: inherit;
+  font-size: inherit;
+}
 .cell-list.field-list .field .label {
   width: 1.5rem;
   height: 100%;
@@ -190,7 +203,7 @@
   font-size: 0.25rem;
 }
 .cell-list .cell {
-  height: 1rem;
+  min-height: 1rem;
   border-bottom: 1px solid #dddddd;
   font-size: 0.3rem;
   display: flex;

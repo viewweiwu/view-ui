@@ -21,20 +21,80 @@
         </header>
         <main class="main">
             <div class="content">
-                <div class="cell-list field-list">
+                <div class="cell-list field-list has-border">
                     <div class="field">
-                        <span class="label">文本框：</span>
-                        <input type="text" class="input">
+                        <label class="label" for="username">账号：</label>
+                        <input type="text" class="input" id="username">
                     </div>
                     <div class="field">
-                        <span class="label">关闭：</span>
+                        <label class="label">关闭：</label>
                         <input type="text" class="input">
                         <span class="right"><i class="iconfont">&#xe641;</i></span>
                     </div>
                     <div class="field">
-                        <span class="label">密码：</span>
+                        <label class="label">密码：</label>
                         <input type="password" class="input" value="nicai">
                         <span class="right"><i class="iconfont">&#xe641;</i></span>
+                    </div>
+                    <div class="field textarea">
+                        <label class="label" for="memo">备注：</label>
+                        <textarea class="content" row="3" id="memo"></textarea>
+                    </div>
+                    <div class="field">
+                        <label class="label">选项：</label>
+                        <div class="select-box">
+                            <div class="item active">第一项</div>
+                            <div class="item">第二项</div>
+                            <div class="item active">第三项</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell-list field-list has-border">
+                    <div class="field">
+                        <label class="label">多选1：</label>
+                        <div class="right">
+                            <div class="checkbox">
+                                <input type="checkbox" id="checkbox1">
+                                <label for="checkbox1">
+                                    <i class="iconfont">&#xe664;</i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">多选2：</label>
+                        <div class="right">
+                            <div class="checkbox">
+                                <input type="checkbox" id="checkbox2">
+                                <label for="checkbox2">
+                                    <i class="iconfont">&#xe664;</i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell-list field-list has-border">
+                    <div class="field">
+                        <label class="label">单选1：</label>
+                        <div class="right">
+                            <div class="radiobox">
+                                <input type="radio" id="radio1" name="r">
+                                <label for="radio1">
+                                    <i class="iconfont">&#xe664;</i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">单选2：</label>
+                        <div class="right">
+                            <div class="radiobox">
+                                <input type="radio" id="radio2" name="r">
+                                <label for="radio2">
+                                    <i class="iconfont">&#xe664;</i>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

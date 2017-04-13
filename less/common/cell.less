@@ -129,6 +129,19 @@
             &:last-child {
                 border-bottom: none;
             }
+            &.textarea {
+                height: auto;
+                min-height: @size;
+                padding: @space;
+                align-items: flex-start;
+                .content {
+                    flex: 1;
+                    height: @size * 1.5;
+                    padding: @space / 2;
+                    line-height: inherit;
+                    font-size: inherit;
+                }
+            }
             .label {
                 width: @size * 1.5;
                 height: 100%;
@@ -182,7 +195,7 @@
         }
     }
     .cell {
-        height: @size;
+        min-height: @size;
         border-bottom: 1px solid @borderColor;
         font-size: @big;
         display: flex;
