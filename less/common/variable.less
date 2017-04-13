@@ -47,3 +47,11 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.ellipsis (@count: 2) {
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: @count;
+    -webkit-box-orient: vertical;
+}

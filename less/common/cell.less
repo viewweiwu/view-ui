@@ -32,18 +32,29 @@
             .card {
                 padding: 0;
                 overflow: hidden;
+                display: flex;
+                flex-direction: column;
                 .image {
                     width: 100%;
+                    height: @size * 3;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
                 .info {
                     margin: @space;
+                    margin-bottom: 0;
                     color: @grayFont;
                 }
                 .content {
+                    flex: 1;
+                    max-height: 3em;
                     margin: @space;
+                    .ellipsis();
                 }
                 .ctrls {
-                    padding: @space;
+                    padding: @space / 2 @space;
                     border-top: 1px solid @borderColor;
                     .flexBetween();
                     .btn-full {
@@ -55,34 +66,43 @@
             &.grid2 {
                 padding: 0 @space;
                 margin: 0;
-                overflow: hidden;
+                display: flex;
+                flex-wrap: wrap;
                 .card {
                     margin: @space / 2 0;
-                    float: left;
                     width: 49%;
                     &:nth-child(2n) {
                         margin-left: 2%;
+                    }
+                    .image {
+                        height: @size * 2.5;
                     }
                 }
             }
             &.grid3 {
                 padding: 0 @space;
                 margin: 0;
-                overflow: hidden;
+                display: flex;
+                flex-wrap: wrap;
                 .card {
                     margin: @space / 2 0;
-                    float: left;
                     width: 32%;
                     margin-right: 2%;
-                    .info,
+                    .info {
+                        margin: @space / 2;
+                        margin-bottom: 0;
+                    }
                     .content {
                         margin: @space / 2;
                     }
                     .ctrls {
-                        padding: @space / 2;
+                        padding: @space / 3 @space / 2;
                     }
                     &:nth-child(3n) {
                         margin-right: 0;
+                    }
+                    .image {
+                        height: @size * 2;
                     }
                 }
             }
