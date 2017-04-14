@@ -576,12 +576,20 @@ select {
   letter-spacing: 0.1rem;
   font-size: 0.35rem;
 }
+.btn.btn-full.not-spacing {
+  letter-spacing: normal;
+}
 .btn.btn-small {
   height: 0.5rem;
   line-height: 0.5rem;
   padding: 0 0.1rem;
   font-size: 0.25rem;
   letter-spacing: normal;
+}
+.btn.btn-big {
+  height: 1rem;
+  line-height: 1rem;
+  font-size: 0.35rem;
 }
 .btn.not-radius {
   border-radius: 0;
@@ -789,6 +797,73 @@ select {
     opacity: 1;
   }
 }
+.msg {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 0.35rem;
+  position: absolute;
+  animation: msgShow 300ms;
+  z-index: 2;
+}
+.msg .pnl {
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  border-radius: 0.1rem;
+  background-color: #fff;
+  transform-origin: 0 0;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  overflow: hidden;
+  animation: msgPnlShow 300ms;
+}
+.msg .pnl .content {
+  margin: 0.2rem;
+  padding: 0.2rem;
+  font-size: inherit;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.msg .pnl .ctrls {
+  border-top: 1px solid #dddddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.msg .pnl .ctrls .btn {
+  flex: 1;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
+.msg .pnl .ctrls .btn:not(:first-child) {
+  border-left: 1px solid #dddddd;
+}
+.msg .pnl .ctrls .btn.btn-confirm {
+  color: #66ccff;
+}
+@keyframes msgShow {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+@keyframes msgPnlShow {
+  0% {
+    transform: scale(0.5) translate(-50%, -50%);
+  }
+  90% {
+    transform: scale(1.1) translate(-50%, -50%);
+  }
+  100% {
+    transform: scale(1) translate(-50%, -50%);
+  }
+}
 html,
 body {
   width: 100%;
@@ -889,4 +964,10 @@ textarea {
 .radius {
   border-radius: 50%;
   overflow: hidden;
+}
+.center {
+  text-align: center;
+}
+.hidden {
+  display: none;
 }

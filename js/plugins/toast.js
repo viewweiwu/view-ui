@@ -5,7 +5,6 @@
         this.position = opts.position || "bottom";
         this.duration = opts.duration || "3000";
         this.$container = $(".container");
-        this.timer = "";
         this.init();
     }
 

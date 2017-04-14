@@ -31,12 +31,20 @@
   letter-spacing: 0.1rem;
   font-size: 0.35rem;
 }
+.btn.btn-full.not-spacing {
+  letter-spacing: normal;
+}
 .btn.btn-small {
   height: 0.5rem;
   line-height: 0.5rem;
   padding: 0 0.1rem;
   font-size: 0.25rem;
   letter-spacing: normal;
+}
+.btn.btn-big {
+  height: 1rem;
+  line-height: 1rem;
+  font-size: 0.35rem;
 }
 .btn.not-radius {
   border-radius: 0;

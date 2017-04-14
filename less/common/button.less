@@ -30,6 +30,9 @@
         margin: @space 3%;
         letter-spacing: @space / 2;
         font-size: @x-big;
+        &.not-spacing {
+            letter-spacing: normal
+        }
     }
     &.btn-small {
         height: @size / 2;
@@ -37,6 +40,11 @@
         padding: 0 @space / 2;
         font-size: @normal;
         letter-spacing: normal;
+    }
+    &.btn-big {
+        height: @size;
+        line-height: @size;
+        font-size: @x-big;
     }
     &.not-radius {
         border-radius: 0;

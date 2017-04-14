@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="index.html" class="link left">
+                <i class="iconfont">&#xe660;</i>
+            </a>
+            <div class="center">message</div>
+            <div class="right"></div>
+        </header>
+        <main class="main">
+            <div class="content">
+                <button class="btn btn-full not-spacing" id="alert">alert</button>
+                <button class="btn btn-full not-spacing" id="confirm">confirm</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/rem.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/plugins/toast.js"></script>
+    <script src="js/plugins/msg.js"></script>
+    <script>
+        $(function() {
+            $("#alert").on("click", function() {
+                $.alert({
+                    content: "你参加的活动马上就要开始啦，点击参加！",
+                    confirmText: "好的",
+                    onConfirm: function() {
+                        $.Toast("你点击了确认");
+                    }
+                })
+            });
+            $("#confirm").on("click", function() {
+                $.confirm({
+                    content: '<div class="center">确认删除吗？</div>',
+                    onConfirm: function() {
+                        $.Toast("你点击了确认");
+                    },
+                    onCancel: function() {
+                        $.Toast("你点击了取消");
+                    }
+                })
+            });
+        })
+    </script>
+</body>
+
+</html>
