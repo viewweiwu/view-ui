@@ -447,6 +447,67 @@ select {
   justify-content: flex-end;
   align-items: center;
 }
+.select-box {
+  background-color: #66ccff;
+  border-radius: 0.1rem;
+  border: 1px solid #dddddd;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.select-box .item {
+  padding: 0.1rem 0.2rem;
+  border-right: 1px solid #dddddd;
+  background-color: #fff;
+}
+.select-box .item:last-child {
+  border-right: none;
+}
+.select-box .item.active {
+  color: #fff;
+  background-color: #66ccff;
+}
+.checkbox {
+  overflow: hidden;
+}
+.checkbox input[type='checkbox'] {
+  position: relative;
+  opacity: 0;
+}
+.checkbox input[type='checkbox']:checked + label {
+  border-color: #66ccff;
+  background-color: #66ccff;
+}
+.checkbox label {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1px solid #dddddd;
+  color: #fff;
+  position: relative;
+  text-align: center;
+}
+.radiobox {
+  overflow: hidden;
+}
+.radiobox input[type='radio'] {
+  position: relative;
+  opacity: 0;
+}
+.radiobox input[type='radio']:checked + label {
+  border-color: #66ccff;
+  background-color: #66ccff;
+}
+.radiobox label {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1px solid #dddddd;
+  color: #fff;
+  position: relative;
+  text-align: center;
+}
 .title {
   height: 0.5rem;
   padding: 0 0.2rem 0 0.24rem;
@@ -828,65 +889,4 @@ textarea {
 .radius {
   border-radius: 50%;
   overflow: hidden;
-}
-.select-box {
-  background-color: #66ccff;
-  border-radius: 0.1rem;
-  border: 1px solid #dddddd;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.select-box .item {
-  padding: 0.1rem 0.2rem;
-  border-right: 1px solid #dddddd;
-  background-color: #fff;
-}
-.select-box .item:last-child {
-  border-right: none;
-}
-.select-box .item.active {
-  color: #fff;
-  background-color: #66ccff;
-}
-.checkbox {
-  overflow: hidden;
-}
-.checkbox input[type='checkbox'] {
-  position: relative;
-  opacity: 0;
-}
-.checkbox input[type='checkbox']:checked + label {
-  border-color: #66ccff;
-  background-color: #66ccff;
-}
-.checkbox label {
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  border: 1px solid #dddddd;
-  color: #fff;
-  position: relative;
-  text-align: center;
-}
-.radiobox {
-  overflow: hidden;
-}
-.radiobox input[type='radio'] {
-  position: relative;
-  opacity: 0;
-}
-.radiobox input[type='radio']:checked + label {
-  border-color: #66ccff;
-  background-color: #66ccff;
-}
-.radiobox label {
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  border: 1px solid #dddddd;
-  color: #fff;
-  position: relative;
-  text-align: center;
 }
