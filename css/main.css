@@ -705,6 +705,29 @@ select {
 .tab .item.has-icon p {
   font-size: .8em;
 }
+.toast {
+  top: 2rem;
+  left: 50%;
+  line-height: 1;
+  padding: 0.2rem;
+  border-radius: 0.1rem;
+  font-size: 0.3rem;
+  z-index: 2;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  text-align: center;
+  transform: translateX(-50%);
+  animation: show 300ms;
+}
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 html,
 body {
   width: 100%;
@@ -774,6 +797,30 @@ textarea {
 }
 .bg-red {
   background-color: #ff0000;
+}
+.font-blue {
+  color: #66ccff;
+}
+.font-orange {
+  color: #ff6600;
+}
+.font-green {
+  color: #9acd32;
+}
+.font-red {
+  color: #ff0000;
+}
+.big {
+  font-size: 0.3rem;
+}
+.x-big {
+  font-size: 0.35rem;
+}
+.xx-big {
+  font-size: 0.4rem;
+}
+.max-big {
+  font-size: 0.75rem;
 }
 .not-radius {
   border-radius: 0;

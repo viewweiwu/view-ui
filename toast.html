@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="index.html" class="link left">
+                <i class="iconfont">&#xe660;</i>
+            </a>
+            <div class="center">toast</div>
+            <div class="right"></div>
+        </header>
+        <main class="main">
+            <div class="content">
+                <button class="btn btn-full" id="top">显示顶部</button>
+                <button class="btn btn-full" id="center">显示中间</button>
+                <button class="btn btn-full" id="bottom">显示底部</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/rem.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/plugins/toast.js"></script>
+    <script>
+        $(function() {
+            $("#top").on("click", function() {
+                $.Toast({
+                    position: "top",
+                    content: "喝牛奶长得高"
+                });
+            });
+            $("#center").on("click", function() {
+                $.Toast({
+                    position: "center",
+                    content: '<i class="iconfont max-big">&#xe664;</i></br>完成', // 存在内容
+                    duration: "10000" // 存在时间 默认3000
+                });
+            });
+            $("#bottom").on("click", function() {
+                $.Toast("您输入的密码有误！"); // 简写
+            });
+        })
+    </script>
+</body>
+
+</html>
