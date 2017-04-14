@@ -22,71 +22,16 @@
                 <button class="btn btn-full not-spacing" id="picker">picker</button>
             </div>
         </main>
-        <div class="picker">
-            <div class="pnl">
-                <div class="top">
-                    <button class="btn not-bg btn-cancel">取消</button>
-                    <button class="btn not-bg btn-confirm">完成</button>
-                </div>
-                <div class="content">
-                    <ul class="list">
-                        <li class="item">1</li>
-                        <li class="item">2</li>
-                        <li class="item">3</li>
-                        <li class="item">4</li>
-                        <li class="item">5</li>
-                        <li class="item">6</li>
-                        <li class="item">7</li>
-                        <li class="item">8</li>
-                        <li class="item">9</li>
-                    </ul>
-                    <ul class="list">
-                        <li class="item">1</li>
-                        <li class="item">2</li>
-                        <li class="item">3</li>
-                        <li class="item">4</li>
-                        <li class="item">5</li>
-                        <li class="item">6</li>
-                        <li class="item">7</li>
-                        <li class="item">8</li>
-                        <li class="item">9</li>
-                    </ul>
-                    <ul class="list">
-                        <li class="item">1</li>
-                        <li class="item">2</li>
-                        <li class="item">3</li>
-                        <li class="item">4</li>
-                        <li class="item">5</li>
-                        <li class="item">6</li>
-                        <li class="item">7</li>
-                        <li class="item">8</li>
-                        <li class="item">9</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script src="js/rem.js"></script>
     <script src="js/zepto.min.js"></script>
     <script src="js/plugins/toast.js"></script>
+    <script src="js/plugins/picker.js"></script>
     <script>
         $(function() {
-            $("#top").on("click", function() {
-                $.Toast({
-                    position: "top",
-                    content: "喝牛奶长得高"
-                });
-            });
-            $("#center").on("click", function() {
-                $.Toast({
-                    position: "center",
-                    content: '<i class="iconfont max-big">&#xe664;</i></br>完成', // 存在内容
-                    duration: "10000" // 存在时间 默认3000
-                });
-            });
-            $("#bottom").on("click", function() {
-                $.Toast("您输入的密码有误！"); // 简写
+            $("#picker").on("click", function() {
+                $.picker([1, 2, 3, 4, 5, 6, 7, 8, 9]);
             });
         })
     </script>

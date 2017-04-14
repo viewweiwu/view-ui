@@ -14,6 +14,10 @@
   position: relative;
   cursor: pointer;
   text-align: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .btn.btn-disabled {
   color: #bbb;

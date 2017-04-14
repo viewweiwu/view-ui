@@ -1,3 +1,4 @@
+@import "variable";
 .picker {
     top: 0;
     left: 0;
@@ -6,7 +7,8 @@
     background-color: @bg-dark;
     font-size: @x-big;
     position: absolute;
-    animation: msgShow 300ms;
+    transition: background-color 300ms;
+    animation: showPicker 300ms;
     z-index: 2;
     .pnl {
         left: 0;
@@ -15,6 +17,8 @@
         height: @size + @size * 2 / 3 * 7;
         background-color: #fff;
         position: absolute;
+        transition: transform 300ms;
+        animation: showPickerPnl 300ms;
         &:after {
             content: "";
             top: @size + @size * 2 / 3 * 3;
@@ -25,6 +29,7 @@
             .borderBottom();
             border-color: @mainColor;
             position: absolute;
+            pointer-events: none;
         }
         .flexColunm();
         .top {
@@ -37,7 +42,7 @@
                 flex: 1;
                 height: 100%;
                 border: none;
-                .not-radius();
+                border-radius: 0;
                 &.btn-confirm {
                     color: @mainColor;
                 }
@@ -49,15 +54,19 @@
         .content {
             width: 100%;
             display: flex;
-            .list {
+            .scroll-pnl {
                 .f1();
                 height: @size * 2 / 3 * 7;
-                .overScroll();
-                position: relative;
-                .item {
-                    width: 100%;
-                    height: @size * 2 / 3;
-                    .flexCenter();
+                overflow: hidden;
+                .list {
+                    position: relative;
+                    user-select: none;
+                    overflow: hidden;
+                    .item {
+                        width: 100%;
+                        height: @size * 2 / 3;
+                        .flexCenter();
+                    }
                 }
             }
         }
@@ -69,5 +78,13 @@
     }
     100% {
         background-color: @bg-dark;
+    }
+}
+@keyframes showPickerPnl {
+    0% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(0);
     }
 }
