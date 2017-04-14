@@ -357,6 +357,7 @@ select {
   padding: 0.1rem;
   line-height: inherit;
   font-size: inherit;
+  border: none;
 }
 .cell-list.field-list .field .label {
   width: 1.5rem;
@@ -805,7 +806,7 @@ select {
   background-color: rgba(0, 0, 0, 0.5);
   font-size: 0.35rem;
   position: absolute;
-  animation: msgShow 300ms;
+  animation: showMsg 300ms;
   z-index: 2;
 }
 .msg .pnl {
@@ -818,7 +819,7 @@ select {
   transform: translate(-50%, -50%);
   position: absolute;
   overflow: hidden;
-  animation: msgPnlShow 300ms;
+  animation: showMsgPnl 300ms;
 }
 .msg .pnl .content {
   margin: 0.2rem;
@@ -845,7 +846,7 @@ select {
 .msg .pnl .ctrls .btn.btn-confirm {
   color: #66ccff;
 }
-@keyframes msgShow {
+@keyframes showMsg {
   0% {
     background-color: rgba(0, 0, 0, 0);
   }
@@ -853,7 +854,7 @@ select {
     background-color: rgba(0, 0, 0, 0.5);
   }
 }
-@keyframes msgPnlShow {
+@keyframes showMsgPnl {
   0% {
     transform: scale(0.5) translate(-50%, -50%);
   }
@@ -862,6 +863,86 @@ select {
   }
   100% {
     transform: scale(1) translate(-50%, -50%);
+  }
+}
+.picker {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 0.35rem;
+  position: absolute;
+  animation: msgShow 300ms;
+  z-index: 2;
+}
+.picker .pnl {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 5.66666667rem;
+  background-color: #fff;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.picker .pnl:after {
+  content: "";
+  top: 3rem;
+  left: 0;
+  width: 100%;
+  height: 0.66666667rem;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+  border-color: #66ccff;
+  position: absolute;
+}
+.picker .pnl .top {
+  width: 100%;
+  height: 1rem;
+  line-height: 1rem;
+  border-bottom: 1px solid #dddddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.picker .pnl .top .btn {
+  flex: 1;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+}
+.picker .pnl .top .btn.btn-confirm {
+  color: #66ccff;
+}
+.picker .pnl .top .btn:not(:first-child) {
+  border-left: 1px solid #dddddd;
+}
+.picker .pnl .content {
+  width: 100%;
+  display: flex;
+}
+.picker .pnl .content .list {
+  flex: 1;
+  height: 4.66666667rem;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+.picker .pnl .content .list .item {
+  width: 100%;
+  height: 0.66666667rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@keyframes showPicker {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.5);
   }
 }
 html,

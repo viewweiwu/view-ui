@@ -6,7 +6,7 @@
     background-color: @bg-dark;
     font-size: @x-big;
     position: absolute;
-    animation: msgShow 300ms;
+    animation: showMsg 300ms;
     z-index: 2;
     .pnl {
         top: 50%;
@@ -18,7 +18,7 @@
         transform: translate(-50%, -50%);
         position: absolute;
         overflow: hidden;
-        animation: msgPnlShow 300ms;
+        animation: showMsgPnl 300ms;
         .content {
             margin: @space;
             padding: @space;
@@ -34,7 +34,7 @@
                 border: none;
                 .not-radius();
                 &:not(:first-child) {
-                    border-left: 1px solid @borderColor;
+                    .borderLeft();
                 }
                 &.btn-confirm {
                     color: @mainColor;
@@ -43,7 +43,7 @@
         }
     }
 }
-@keyframes msgShow {
+@keyframes showMsg {
     0% {
         background-color: rgba(0, 0, 0, 0);
     }
@@ -51,7 +51,7 @@
         background-color: @bg-dark;
     }
 }
-@keyframes msgPnlShow {
+@keyframes showMsgPnl {
     0% {
         transform: scale(.5) translate(-50%, -50%);
     }
