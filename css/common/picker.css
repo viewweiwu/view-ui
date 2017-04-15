@@ -3,13 +3,14 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0);
   font-size: 0.35rem;
   position: absolute;
   -webkit-transition: background-color 300ms;
           transition: background-color 300ms;
-  -webkit-animation: showPicker 300ms;
-          animation: showPicker 300ms;
+  -webkit-transform: translateX(100%);
+      -ms-transform: translateX(100%);
+          transform: translateX(100%);
   z-index: 2;
 }
 .picker .pnl {
@@ -19,10 +20,11 @@
   height: 5.66666667rem;
   background-color: #fff;
   position: absolute;
+  -webkit-transform: translateY(100%);
+      -ms-transform: translateY(100%);
+          transform: translateY(100%);
   -webkit-transition: -webkit-transform 300ms;
           transition: transform 300ms;
-  -webkit-animation: showPickerPnl 300ms;
-          animation: showPickerPnl 300ms;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -120,40 +122,4 @@
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
-}
-@-webkit-keyframes showPicker {
-  0% {
-    background-color: rgba(0, 0, 0, 0);
-  }
-  100% {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-}
-@keyframes showPicker {
-  0% {
-    background-color: rgba(0, 0, 0, 0);
-  }
-  100% {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-}
-@-webkit-keyframes showPickerPnl {
-  0% {
-    -webkit-transform: translateY(100%);
-            transform: translateY(100%);
-  }
-  100% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-  }
-}
-@keyframes showPickerPnl {
-  0% {
-    -webkit-transform: translateY(100%);
-            transform: translateY(100%);
-  }
-  100% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-  }
 }
