@@ -21,8 +21,13 @@
 				<div class="content">
 					<div class="list-cell cell-list field-list">
 						<div class="field">
-							<label class="label" for="username">年龄：</label>
-							<input type="text" class="input" id="age" placeholder="请选择你的年龄">
+							<label class="label" for="fruit">水果：</label>
+							<input type="text" class="input" id="fruit" placeholder="请选择喜欢的水果">
+						</div>
+						<h2 class="title">级联</h2>
+						<div class="field">
+							<label class="label" for="city">城市：</label>
+							<input type="text" class="input" id="city" placeholder="请选择城市">
 						</div>
 					</div>
 				</div>
@@ -33,17 +38,33 @@
 		<script src="js/zepto.min.js"></script>
 		<script src="js/plugins/toast.js"></script>
 		<script src="js/plugins/picker.js"></script>
+		<script src="js/cityData.js"></script>
 		<script>
 			$(function() {
-//				$("#picker").data("ddd",{a: 1, b: 2});
-//				console.log($("#picker").data("ddd"));
-//				$("#picker").on("click", function() {
-//					$.picker([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-//				});
-				$("#age").picker({
-					data: [1, 2, 3, 4, 5]
+				$("#fruit").picker({
+					data: [{
+						text: "菠萝",
+						value: "22"
+					},{
+						text: "火龙果",
+						value: "10"
+					},{
+						text: "苹果",
+						value: "6"
+					},{
+						text: "西瓜",
+						value: "23"
+					}],
+					text: "text",
+					value: "value"
 				});
-			})
+				$("#city").picker({
+					data: cityData,
+					text: "text",
+					value: "value"
+				});
+			});
+			
 		</script>
 	</body>
 

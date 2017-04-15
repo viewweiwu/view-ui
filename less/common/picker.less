@@ -1,5 +1,6 @@
 @import "variable";
 .picker {
+    @singleHeight: @size * 4 / 5;
     top: 0;
     left: 0;
     width: 100%;
@@ -14,18 +15,17 @@
         left: 0;
         bottom: 0;
         width: 100%;
-        height: @size + @size * 2 / 3 * 7;
+        height: @size + @singleHeight * 7;
         background-color: #fff;
         position: absolute;
         transform: translateY(100%);
         transition: transform 300ms;
         .flexColunm();
-        &:after {
-            content: "";
-            top: @size + @size * 2 / 3 * 3;
+        .decorate {
+            top: @size + @singleHeight * 3;
             left: 0;
             width: 100%;
-            height: @size * 2 / 3;
+            height: @singleHeight;
             .borderTop();
             .borderBottom();
             border-color: @mainColor;
@@ -56,7 +56,7 @@
             display: flex;
             .scroll-pnl {
                 .f1();
-                height: @size * 2 / 3 * 7;
+                height: @singleHeight * 7;
                 overflow: hidden;
                 .list {
                     position: relative;
@@ -64,7 +64,7 @@
                     overflow: hidden;
                     .item {
                         width: 100%;
-                        height: @size * 2 / 3;
+                        height: @singleHeight;
                         .flexCenter();
                     }
                 }
