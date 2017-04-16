@@ -15,7 +15,7 @@
 	Picker.prototype = {
 		init: function() {
 			this.createEl();
-			this.list.push(new List(this.data, this));
+			this.addList(this.data);
 			this.initStyle();
 			this.bind();
 		},
@@ -84,20 +84,34 @@
 				var target = this.list[index];
 				var data = target.data[target.getIndex() - 1] && target.data[target.getIndex() - 1]["children"];
 				
+				// 如果选择了初始选项，则销毁兄弟 list
 				if(target.getIndex() === 0) {
 					$.each(this.list.slice(index + 1), function(i, obj) {
 							obj.destroy();
 					});
 					this.list.length = index + 1;
+					this.resetListSize();
 					return;
 				}
 				
+				// 如果对象存在，则扩展一层 list
 				if(data) {
-					$.each(this.list.slice(index + 1), function(i, obj) {
-							obj.destroy();
-					});
-					this.list.length = index + 1;
-					this.list.push(new List(data, this));
+					// 下层 list 如果已存在，则不销毁元素，而是重新设值, 并销毁下层之后的所有 list
+					if(this.list[index + 1]) {
+						this.list[index + 1].setData(data);
+						$.each(this.list.slice(index + 2), function(i, obj) {
+								obj.destroy();
+						});
+						this.list.length = index + 2;
+						this.resetListSize();
+					} else {
+						// 否则销毁后面所有层的 list，并添加下层
+						$.each(this.list.slice(index + 1), function(i, obj) {
+								obj.destroy();
+						});
+						this.list.length = index + 1;
+						this.addList(data);
+					}
 				}
 			}
 			
@@ -125,6 +139,16 @@
 					"transform": "translateX(100%)"
 				})
 			}, 300);
+		},
+		addList: function(data) {
+			this.list.push(new List(data, this));
+			this.resetListSize();
+		},
+		resetListSize: function() {
+			var self = this;
+			$.each(this.list, function(i, obj) {
+				obj.$parent.width(100 / self.list.length  + "%");
+			});
 		}
 	};
 
@@ -150,8 +174,12 @@
 		createEl: function() {
 			var $html = $(this.getHtml(this.data));
 			this.$content.append($html);
+			this.$parent = $html;
 			this.$el = $html.find(".list");
 			this.singleHeight = this.$el.find(".item").height(); // 1 个单位 = 单个 li 的 height
+			this.resetSingleSize();
+		},
+		resetSingleSize: function() {
 			this.$el.find(".item").height(this.singleHeight);
 		},
 		getSingleHeight: function() {
@@ -160,25 +188,29 @@
 		getHtml: function(data) {
 			var result = "";
 			var self = this;
-			
 			result += 
 				'<div class="scroll-pnl">'+
 					'<ul class="list">' +
-						'<li class="item">' + this.defaultText + '</li>';
-			
-						$.each(data || [], function(i, obj) {
-							var text = "";
-							var value = "";
-							if(typeof obj === "string" || typeof obj === "number") {
-								result += '<li class="item" data-index="' + i + '">' + obj + '</li>';
-							} else {
-								result += '<li class="item" data-index="' + i + '" data-value=' + obj[self.selectValue] + '>' + obj[self.selectText] + '</li>';
-							}
-						});
-			
-			result +=
+						this.getListHtml(data) +
 					'</ul>'+
 				'</div>';
+			return result;
+		},
+		getListHtml: function(data) {
+			var result = "";
+			var self = this;
+			
+			result += '<li class="item">' + this.defaultText + '</li>';
+			$.each(data || [], function(i, obj) {
+				var text = "";
+				var value = "";
+				if(typeof obj === "string" || typeof obj === "number") {
+					result += '<li class="item" data-index="' + i + '">' + obj + '</li>';
+				} else {
+					result += '<li class="item" data-index="' + i + '" data-value=' + obj[self.selectValue] + '>' + obj[self.selectText] + '</li>';
+				}
+			});
+			
 			return result;
 		},
 		/**
@@ -222,7 +254,7 @@
 			var final = pageY - this.pageY + y; // 比较差值并累加，计算出最终值
 			$target.css({
 				"transform": "translateY(" + final + "px)",
-				"transition": ""
+				"transition": "width 300ms"
 			});
 			this.pageY = pageY; // 重新标记 pageY
 		},
@@ -279,7 +311,7 @@
 			
 			$target.css({
 				"transform": "translateY(" + final + "px)",
-				"transition": "transform 300ms"
+				"transition": "width, transform 300ms"
 			});
 			
 			self.timer = setTimeout(function() {
@@ -306,8 +338,18 @@
 		getValue: function() {
 			return this.$el.find(".item").eq(this.getIndex()).data("value");
 		},
+		setData: function(data) {
+			this.data = data;
+			if(data.length) {
+				this.$el.html(this.getListHtml(data));
+				this.initStyle();
+				this.resetSingleSize();
+			} else {
+				this.destroy();
+			}
+		},
 		destroy: function() {
-			this.$el.parent().remove();
+			this.$parent.remove();
 		}
 	}
 	

@@ -55,9 +55,10 @@
             width: 100%;
             display: flex;
             .scroll-pnl {
-                .f1();
+                width: 20%;
                 height: @singleHeight * 7;
                 overflow: hidden;
+                transition: width 300ms;
                 .list {
                     position: relative;
                     user-select: none;
@@ -65,6 +66,8 @@
                     .item {
                         width: 100%;
                         height: @singleHeight;
+                        overflow: hidden;
+                        line-height: 1;
                         .flexCenter();
                     }
                 }
