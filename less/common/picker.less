@@ -54,6 +54,7 @@
         .content {
             width: 100%;
             display: flex;
+            .f1();
             .scroll-pnl {
                 width: 20%;
                 height: @singleHeight * 7;
@@ -63,12 +64,18 @@
                     position: relative;
                     user-select: none;
                     overflow: hidden;
+                    animation: pickerItemShow 300ms;
                     .item {
                         width: 100%;
                         height: @singleHeight;
                         overflow: hidden;
                         line-height: 1;
                         .flexCenter();
+                    }
+                    
+                    @keyframes pickerItemShow {
+                        0% {opacity: .3;}
+                        100% {opacity: 1;}
                     }
                 }
             }

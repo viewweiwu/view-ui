@@ -928,6 +928,7 @@ select {
 .picker .pnl .content {
   width: 100%;
   display: flex;
+  flex: 1;
 }
 .picker .pnl .content .scroll-pnl {
   width: 20%;
@@ -939,6 +940,7 @@ select {
   position: relative;
   user-select: none;
   overflow: hidden;
+  animation: pickerItemShow 300ms;
 }
 .picker .pnl .content .scroll-pnl .list .item {
   width: 100%;
@@ -948,6 +950,14 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+@keyframes pickerItemShow {
+  0% {
+    opacity: .3;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 html,
 body {

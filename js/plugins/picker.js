@@ -52,17 +52,31 @@
 				"focus": this.onTargetFocus.bind(this),
 				"change": this.onTargetChange.bind(this)
 			});
-			this.$cancelBtn.on("click", this.onCancelBtnClick.bind(this));
-			this.$confirmBtn.on("click", this.onConfirmBtnClick.bind(this));
+			this.$cancelBtn.on({
+				"touchstart": this.onCancelBtnClick.bind(this)
+			});
+			this.$confirmBtn.on({
+				"touchstart": this.onConfirmBtnClick.bind(this)
+			});
+			this.$el.on("touchstart", this.preventDefault.bind(this));
+		},
+		preventDefault: function(e) {
+			e.preventDefault();
 		},
 		onTargetFocus: function(e) {
+			e.preventDefault();
+			e.stopPropagation();
 			this.$target.blur();
 			this.show();
 		},
 		onCancelBtnClick: function(e) {
+			e.preventDefault();
+			e.stopPropagation();
 			this.close();
 		},
 		onConfirmBtnClick: function(e) {
+			e.preventDefault();
+			e.stopPropagation();
 			var self = this;
 			var text = "";
 			var value = "";
@@ -223,10 +237,11 @@
 			this.defalutY = defalutY;
 		},
 		bind: function() {
-			this.$el.on({
+			this.$parent.on({
 				"touchstart": this.onStart.bind(this),
 				"touchmove": this.onMove.bind(this),
-				"touchend": this.onEnd.bind(this)
+				"touchend": this.onEnd.bind(this),
+				"touchcancel": this.onEnd.bind(this)
 			});
 		},
 		
@@ -273,6 +288,7 @@
 			var diff = 0; // 矫正差值
 			var dateDiff = new Date() - this.startDate; // 于开始的滚动时间做判断 
 			var diffY = this.startY - y; // 计算滚动惯性
+			var direction = diffY > 0 ? 1 : -1; // 计算滚动方向
 			
 			// 矫正边界 判断最终值是否超出边界，矫正到顶部边界或者底部边界
 			if(y > 0) {
@@ -283,37 +299,35 @@
 
 			// 计算需要矫正的差
 			diff = final % this.singleHeight;
+			final -= diff;
 
-			// 矫正未移动到正确位置的最终值，如果差值大于一半，则最终值加上一个单位，反之减去一个单位
-			if(diff < this.singleHeight / 2) {
-				final = final - diff;
-			} else {
-				final = final - diff + this.singleHeight;
+			// 矫正未移动到正确位置的最终值，如果差值大于一半，则最终值加上一个单位
+			if(Math.abs(diff) > this.singleHeight / 2) {
+				final -= this.singleHeight * direction;
 			}
 				
 			// 惯性滚动
-			if(true) {
-				var direction = diffY > 0 ? 1 : -1;
-				var d = Math.round(Math.abs(diffY) / this.singleHeight * 2); // 移动单位
-				var t = 3 - Math.ceil(dateDiff / 100); // 移动时间
-				if(t < 1) t = 0;
-				var a = t * d * direction * this.singleHeight;
-				
-				final -= a;
-				
-				// 再次矫正
-				if(final < bottom + 3 * this.singleHeight) {
-					final = bottom + 3 * this.singleHeight;
-				} else if(final > this.defalutY) {
-					final = this.defalutY;
-				}
+			var d = Math.round(Math.abs(diffY) / this.singleHeight * 2); // 移动单位
+			var t = 3 - Math.ceil(dateDiff / 100); // 移动时间
+			if(t < 1) t = 0;
+			var a = t * d * direction * this.singleHeight;
+			
+			final -= a;
+			
+			// 再次矫正
+			if(final < bottom + 3 * this.singleHeight) {
+				final = bottom + 3 * this.singleHeight;
+			} else if(final > this.defalutY) {
+				final = this.defalutY;
 			}
 			
+			// 进行滚动
 			$target.css({
 				"transform": "translateY(" + final + "px)",
 				"transition": "width, transform 300ms"
 			});
 			
+			// 发布事件
 			self.timer = setTimeout(function() {
 				var index = self.getIndex();
 				if(self.timer) {
@@ -360,7 +374,9 @@
 		 */
 		getTarget: function(e) {
 			var $target = $(e.target);
-			if($target.is(".item")) {
+			if($target.is(".scroll-pnl")) {
+				$target = $target.find(".list");
+			} else if($target.is(".item")) {
 				$target = $target.parent();
 			}
 			return $target;
