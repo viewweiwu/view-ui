@@ -52,12 +52,8 @@
 				"focus": this.onTargetFocus.bind(this),
 				"change": this.onTargetChange.bind(this)
 			});
-			this.$cancelBtn.on({
-				"touchstart": this.onCancelBtnClick.bind(this)
-			});
-			this.$confirmBtn.on({
-				"touchstart": this.onConfirmBtnClick.bind(this)
-			});
+			this.$cancelBtn.on("touchstart", this.onCancelBtnClick.bind(this));
+			this.$confirmBtn.on("touchstart", this.onConfirmBtnClick.bind(this));
 			this.$el.on("touchstart", this.preventDefault.bind(this));
 		},
 		preventDefault: function(e) {
@@ -306,19 +302,21 @@
 				final -= this.singleHeight * direction;
 			}
 				
-			// 惯性滚动
-			var d = Math.round(Math.abs(diffY) / this.singleHeight * 2); // 移动单位
-			var t = 3 - Math.ceil(dateDiff / 100); // 移动时间
-			if(t < 1) t = 0;
-			var a = t * d * direction * this.singleHeight;
-			
-			final -= a;
-			
-			// 再次矫正
-			if(final < bottom + 3 * this.singleHeight) {
-				final = bottom + 3 * this.singleHeight;
-			} else if(final > this.defalutY) {
-				final = this.defalutY;
+			// 惯性滚动，滚动超过两格才做处理
+			if(Math.abs(diffY) > this.singleHeight * 2) {
+				var d = Math.round(Math.abs(diffY) / this.singleHeight * 2); // 移动单位
+				var t = 3 - Math.ceil(dateDiff / 100); // 移动时间
+				if(t < 1) t = 0;
+				var a = t * d * direction * this.singleHeight;
+				
+				final -= a;
+				
+				// 再次矫正
+				if(final < bottom + 3 * this.singleHeight) {
+					final = bottom + 3 * this.singleHeight;
+				} else if(final > this.defalutY) {
+					final = this.defalutY;
+				}
 			}
 			
 			// 进行滚动
