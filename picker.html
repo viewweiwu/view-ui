@@ -1,71 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 
-	<head>
-		<title></title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="css/main.css" rel="stylesheet">
-	</head>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="css/main.css" rel="stylesheet">
+</head>
 
-	<body>
-		<div class="container">
-			<header class="header">
-				<a href="index.html" class="link left">
-					<i class="iconfont">&#xe660;</i>
-				</a>
-				<div class="center">picker</div>
-				<div class="right"></div>
-			</header>
-			<main class="main">
-				<div class="content">
-					<div class="list-cell cell-list field-list">
-						<div class="field">
-							<label class="label" for="fruit">水果：</label>
-							<input type="text" class="input" id="fruit" placeholder="请选择喜欢的水果">
-						</div>
-						<h2 class="title">级联</h2>
-						<div class="field">
-							<label class="label" for="city">城市：</label>
-							<input type="text" class="input" id="city" placeholder="请选择城市">
-						</div>
-					</div>
-				</div>
-			</main>
-		</div>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="index.html" class="link left">
+                <i class="iconfont">&#xe660;</i>
+            </a>
+            <div class="center">picker</div>
+            <div class="right"></div>
+        </header>
+        <main class="main">
+            <div class="content">
+                <div class="list-cell cell-list field-list">
+                    <div class="field">
+                        <label class="label" for="fruit">水果：</label>
+                        <input type="text" class="input" id="fruit" placeholder="请选择喜欢的水果">
+                    </div>
+                    <h2 class="title">级联</h2>
+                    <div class="field">
+                        <label class="label" for="city">城市：</label>
+                        <input type="text" class="input" id="city" placeholder="请选择城市">
+                    </div>
+                    <h2 class="title">级联设置默认值</h2>
+                    <div class="field">
+                        <label class="label" for="city">城市：</label>
+                        <input type="text" class="input" id="city2" placeholder="请选择城市">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-		<script src="js/rem.js"></script>
-		<script src="js/zepto.min.js"></script>
-		<script src="js/plugins/toast.js"></script>
-		<script src="js/plugins/picker.js"></script>
-		<script src="js/cityData.js"></script>
-		<script>
-			$(function() {
-				$("#fruit").picker({
-					data: [{
-						text: "菠萝",
-						value: "22"
-					},{
-						text: "火龙果",
-						value: "10"
-					},{
-						text: "苹果",
-						value: "6"
-					},{
-						text: "西瓜",
-						value: "23"
-					}],
-					text: "text",
-					value: "value"
-				});
-				$("#city").picker({
-					data: cityData,
-					text: "text",
-					value: "value"
-				});
-			});
-			
-		</script>
-	</body>
+    <script src="js/rem.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/plugins/toast.js"></script>
+    <script src="js/plugins/picker.js"></script>
+    <script src="js/cityData.js"></script>
+    <script>
+        $(function() {
+            $("#fruit").picker({
+                data: [{
+                    text: "菠萝",
+                    value: "22"
+                }, {
+                    text: "火龙果",
+                    value: "10"
+                }, {
+                    text: "苹果",
+                    value: "6"
+                }, {
+                    text: "西瓜",
+                    value: "23"
+                }]
+            });
+            $("#city").picker({
+                data: cityData
+            });
+            $("#city2").picker({
+                data: cityData
+            });
+
+            // $("#city2").data("picker").setText("浙江省 - 杭州市 - 江干区");
+            $("#city2").data("picker").setValue("330000 - 330100 - 330104");
+        });
+    </script>
+</body>
 
 </html>

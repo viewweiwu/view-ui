@@ -3,8 +3,9 @@
         this.$container = $(".container"); // 最外层容器啦
         this.$target = $target;
         this.id = opts.id ? opts.id : $target.attr("id");
-        this.selectText = opts.text;
-        this.selectValue = opts.value;
+        this.selectText = opts.text || "text";
+        this.selectValue = opts.value || "value";
+        this.selectList = opts.list || "children";
         this.data = opts.data;
         this.list = [];
         this.split = " - ";
@@ -52,8 +53,8 @@
                 "focus": this.onTargetFocus.bind(this),
                 "change": this.onTargetChange.bind(this)
             });
-            this.$cancelBtn.on("touchstart", this.onCancelBtnClick.bind(this));
-            this.$confirmBtn.on("touchstart", this.onConfirmBtnClick.bind(this));
+            this.$cancelBtn.on("tap", this.onCancelBtnClick.bind(this));
+            this.$confirmBtn.on("tap", this.onConfirmBtnClick.bind(this));
             this.$el.on("touchstart", this.preventDefault.bind(this));
         },
         preventDefault: function(e) {
@@ -73,26 +74,12 @@
         onConfirmBtnClick: function(e) {
             e.preventDefault();
             e.stopPropagation();
-            var self = this;
-            var text = "";
-            var value = "";
-            this.close();
-            $.each(this.list, function(i, obj) {
-                if (obj.getIndex() === 0) return true;
-                if (i !== 0) {
-                    text += self.split;
-                    value += self.split;
-                }
-                text += obj.getText();
-                value += obj.getValue();
-            });
-            this.$target.val(text);
-            this.$target.attr("data-value", value);
+            this.setTargetData();
         },
         onTargetChange: function(e, index) {
             if (this.list[index]) {
                 var target = this.list[index];
-                var data = target.data[target.getIndex() - 1] && target.data[target.getIndex() - 1]["children"];
+                var data = target.data[target.getIndex() - 1] && target.data[target.getIndex() - 1][this.selectList];
 
                 // 如果选择了初始选项，则销毁兄弟 list
                 if (target.getIndex() === 0) {
@@ -124,10 +111,8 @@
                     }
                 }
             }
-
         },
         show: function() {
-            var self = this;
             this.$el.css({
                 "background-color": "rgba(0, 0, 0, .5)",
                 "transform": "translateX(0)"
@@ -138,10 +123,10 @@
         },
         close: function() {
             var self = this;
-            self.$el.css({
+            this.$el.css({
                 "background-color": "rgba(0, 0, 0, 0)"
             });
-            self.$pnl.css({
+            this.$pnl.css({
                 "transform": "translateY(100%)"
             });
             setTimeout(function() {
@@ -159,6 +144,70 @@
             $.each(this.list, function(i, obj) {
                 obj.$parent.width(100 / self.list.length + "%");
             });
+        },
+        setTargetData: function() {
+            var self = this;
+            var text = "";
+            var value = "";
+            this.close();
+            $.each(this.list, function(i, obj) {
+                if (obj.getIndex() === 0) return true;
+                if (i !== 0) {
+                    text += self.split;
+                    value += self.split;
+                }
+                text += obj.getText();
+                value += obj.getValue();
+            });
+            this.$target.val(text);
+            this.$target.attr("data-value", value);
+        },
+        setData: function(d, type) {
+            var list = d.split(this.split);
+            var data = this.data;
+
+            // 寻找第一层
+            for (var i = 0; i < list.length; i++) {
+                var targetList = this.list[i];
+
+                // 如果不存在那一层，则添加那一层
+                if (!targetList) {
+                    this.addList(data);
+                    targetList = this.list[i];
+                }
+
+                // 滚动到指定位置
+                if (type === "text") {
+                    targetList.setText(list[i]);
+                } else {
+                    targetList.setValue(list[i]);
+                }
+
+                // 将数据指向到下一层
+                if (data[targetList.getIndex() - 1]) {
+                    data = data[targetList.getIndex() - 1][this.selectList];
+                }
+
+                // 展开下一层
+                if (data) {
+                    var nextList = this.list[i + 1];
+
+                    // 如果不存在下一层，则添加下一层
+                    if (!nextList) {
+                        this.addList(data);
+                        nextList = this.list[i + 1];
+                    }
+                }
+            }
+
+            // 将值赋值到文本框
+            this.setTargetData();
+        },
+        setValue: function(value) {
+            this.setData(value, "value");
+        },
+        setText: function(text) {
+            this.setData(text, "text");
         }
     };
 
@@ -294,11 +343,18 @@
 
             // 计算需要矫正的差
             diff = final % this.singleHeight;
-            final -= diff;
+
             // 矫正未移动到正确位置的最终值，如果差值大于一半，则最终值加上一个单位
             if (Math.abs(diff) > this.singleHeight / 2) {
-                final -= this.singleHeight;
+                if (final < 0) {
+                    final -= this.singleHeight;
+                } else if (final >= 0) {
+                    final += this.singleHeight;
+                }
             }
+
+            // 减去冗余
+            final -= diff;
 
             // 惯性滚动，滚动超过两格才做处理
             if (Math.abs(diffY) > this.singleHeight * 2) {
@@ -335,10 +391,9 @@
             }, 300);
         },
         getIndex: function() {
-            var self = this;
             var result = "";
-            var y = (util.getY(this.$el) - self.defalutY) * -1;
-            var index = Math.round(y / self.singleHeight);
+            var y = (util.getY(this.$el) - this.defalutY) * -1;
+            var index = Math.round(y / this.singleHeight);
 
             return index;
         },
@@ -347,6 +402,28 @@
         },
         getValue: function() {
             return this.$el.find(".item").eq(this.getIndex()).data("value");
+        },
+        setIndex: function(index) {
+            var y = this.defalutY + (index + 1) * this.singleHeight * -1;
+            this.$el.css("transform", "translateY(" + y + "px)");
+        },
+        setText: function(text) {
+            var self = this;
+            $.each(this.data, function(i, obj) {
+                if (obj[self.selectText] === text) {
+                    self.setIndex(i);
+                    return false;
+                }
+            });
+        },
+        setValue: function(value) {
+            var self = this;
+            $.each(this.data, function(i, obj) {
+                if (obj[self.selectValue] === value) {
+                    self.setIndex(i);
+                    return false;
+                }
+            });
         },
         setData: function(data) {
             this.data = data;
