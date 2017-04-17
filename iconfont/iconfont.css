@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1491995928113'); /* IE9*/
-  src: url('iconfont.eot?t=1491995928113#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1491995928113') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1491995928113') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1491995928113#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1492398600335'); /* IE9*/
+  src: url('iconfont.eot?t=1492398600335#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1492398600335') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1492398600335') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1492398600335#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -130,4 +130,6 @@
 .icon-paixu1:before { content: "\e626"; }
 
 .icon-hangcheng:before { content: "\e8a1"; }
+
+.icon-selected-t:before { content: "\e683"; }
 
