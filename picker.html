@@ -34,6 +34,11 @@
                         <label class="label" for="city">城市：</label>
                         <input type="text" class="input" id="city2" placeholder="请选择城市">
                     </div>
+                    <h2 class="title">日期选择器</h2>
+                    <div class="field">
+                        <label class="label" for="date">时间：</label>
+                        <input type="text" class="input" id="date" placeholder="请选择出生日期">
+                    </div>
                 </div>
             </div>
         </main>
@@ -70,6 +75,11 @@
 
             // $("#city2").data("picker").setText("浙江省 - 杭州市 - 江干区");
             $("#city2").data("picker").setValue("330000 - 330100 - 330104");
+
+            $("#date").datepicker({
+                type: "date",
+                formatStr: "MM-dd-yyyy"
+            });
         });
     </script>
 </body>

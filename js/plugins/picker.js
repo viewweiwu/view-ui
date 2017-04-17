@@ -1,5 +1,6 @@
 (function($) {
     function Picker($target, opts) {
+        opts = opts || {};
         this.$container = $(".container"); // 最外层容器啦
         this.$target = $target;
         this.id = opts.id ? opts.id : $target.attr("id");
@@ -440,6 +441,98 @@
         }
     }
 
+    function DatePicker($target, opts) {
+        opts = opts || {};
+        this.$target = $target;
+        this.opts = opts;
+        this.formatStr = opts.formatStr || "yyyy-MM-dd hh:mm:ss";
+        this.type = opts.type || "date";
+        this.list = [];
+        this.data = [];
+        this.init();
+    }
+
+    DatePicker.prototype = {
+        init: function() {
+            this.getRange();
+            this.getIndexList();
+            this.getData();
+            this.getPicker();
+        },
+        getRange: function() {
+            // 默认向前 20 年
+            if (!this.opts.start) {
+                var date = new Date();
+                date.setFullYear(date.getFullYear() - 20);
+                this.start = date;
+            }
+
+            // 默认向后 20 年
+            if (!this.opts.end) {
+                var date = new Date();
+                date.setFullYear(date.getFullYear() + 20);
+                this.end = date;
+            }
+        },
+        getIndexList: function() {
+            var hash = {};
+            var list = [];
+            hash[this.formatStr.indexOf("yyyy")] = 'yyyy';
+            hash[this.formatStr.indexOf("MM")] = 'MM';
+            hash[this.formatStr.indexOf("dd")] = 'dd';
+            hash[this.formatStr.indexOf("hh")] = 'hh';
+            hash[this.formatStr.indexOf("mm")] = 'mm';
+            hash[this.formatStr.indexOf("ss")] = 'ss';
+
+            delete hash['-1'];
+
+            for (var obj in hash) {
+                list.push(hash[obj]);
+            }
+
+            this.list = list;
+        },
+        getData: function() {
+            var startYear = this.start.getFullYear();
+            var endYear = this.end.getFullYear();
+            var data = [];
+            switch (this.type) {
+                case "date":
+                    // 添加年份
+                    for (var i = startYear; i < endYear; i++) {
+                        var year = {
+                            text: i,
+                            value: i,
+                            children: []
+                        }
+
+                        for (var j = 1; j < 13; j++) {
+                            var month = {
+                                text: j,
+                                value: j,
+                                children: []
+                            }
+                            for (var k = 1; k < 30; k++) {
+                                var day = {
+                                    text: k,
+                                    value: k
+                                }
+                                month.children.push(day);
+                            }
+                            year.children.push(month);
+                        }
+                        data.push(year);
+                    }
+                    break;
+            }
+            this.data = data;
+            this.opts.data = data;
+        },
+        getPicker: function() {
+            this.picker = new Picker(this.$target, this.opts);
+        }
+    }
+
     var util = {
         /**
          * 名称: 获取目标
@@ -467,6 +560,13 @@
         return this.each(function(i, obj) {
             var $target = $(obj);
             $target.data("picker", new Picker($target, options));
+        });
+    }
+
+    $.fn.datepicker = function(options) {
+        return this.each(function(i, obj) {
+            var $target = $(obj);
+            $target.data("picker", new DatePicker($target, options));
         });
     }
 })(Zepto);
