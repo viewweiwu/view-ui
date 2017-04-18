@@ -314,7 +314,7 @@
             if (Math.abs(diff) > this.singleHeight / 2) {
                 if (final < 0) {
                     final -= this.singleHeight;
-                } else if (final >= 0) {
+                } else {
                     final += this.singleHeight;
                 }
             }

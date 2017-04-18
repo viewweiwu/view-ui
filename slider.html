@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="index.html" class="link left">
+                <i class="iconfont">&#xe660;</i>
+            </a>
+            <div class="center">slider</div>
+            <div class="right"></div>
+        </header>
+        <main class="main">
+            <div class="content">
+                <div id="slider">
+                    <ul>
+                        <li><img src="./images/simple.jpg" alt=""></li>
+                        <li><img src="./images/simple2.jpg" alt=""></li>
+                        <li><img src="./images/simple3.jpg" alt=""></li>
+                        <li><img src="./images/simple4.jpg" alt="" draggable="false"></li>
+                    </ul>
+                </div>
+                <div id="info"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/rem.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/plugins/slider.js"></script>
+    <script>
+        $(function() {
+            $("#slider").slider();
+        })
+    </script>
+</body>
+
+</html>
