@@ -11,6 +11,7 @@
         this.list = [];
         this.split = " - ";
         this.defaultText = "请选择";
+        this.hasDefault = opts.hasDefault === false ? false : true;
         this.init();
     }
 
@@ -79,11 +80,17 @@
         },
         onTargetChange: function(e, index) {
             if (this.list[index]) {
-                var target = this.list[index];
-                var data = target.data[target.getIndex() - 1] && target.data[target.getIndex() - 1][this.selectList];
+                var targetList = this.list[index];
+                var data;
+
+                if (this.hasDefault === true) {
+                    data = targetList.data[targetList.getIndex() - 1] && targetList.data[targetList.getIndex() - 1][this.selectList];
+                } else {
+                    data = targetList.data[targetList.getIndex()] && targetList.data[targetList.getIndex()][this.selectList];
+                }
 
                 // 如果选择了初始选项，则销毁兄弟 list
-                if (target.getIndex() === 0) {
+                if (targetList.getIndex() === 0 && targetList.getText() === this.defaultText) {
                     $.each(this.list.slice(index + 1), function(i, obj) {
                         obj.destroy();
                     });
@@ -152,7 +159,7 @@
             var value = "";
             this.close();
             $.each(this.list, function(i, obj) {
-                if (obj.getIndex() === 0) return true;
+                if (obj.getIndex() === 0 && obj.getText === self.defaultText) return true;
                 if (i !== 0) {
                     text += self.split;
                     value += self.split;
@@ -212,7 +219,7 @@
         }
     };
 
-    function List(data, picker) {
+    function List(data, picker, type) {
         this.$container = picker.$container; // 最外层容器啦
         this.$picker = picker.$el;
         this.$pnl = picker.$pnl;
@@ -221,6 +228,8 @@
         this.selectText = picker.selectText;
         this.selectValue = picker.selectValue;
         this.defaultText = picker.defaultText;
+        this.hasDefault = picker.hasDefault;
+        this.type = type; // 判断 datepicker 是什么类型的
         this.data = data;
         this.init();
     }
@@ -259,8 +268,9 @@
         getListHtml: function(data) {
             var result = "";
             var self = this;
-
-            result += '<li class="item">' + this.defaultText + '</li>';
+            if (this.hasDefault) {
+                result += '<li class="item">' + this.defaultText + '</li>';
+            }
             $.each(data || [], function(i, obj) {
                 var text = "";
                 var value = "";
@@ -281,6 +291,17 @@
             var defalutY = this.singleHeight * 3;
             this.$el.css("transform", "translateY(" + defalutY + "px)");
             this.defalutY = defalutY;
+        },
+        refresh: function() {
+            var $target = this.$el;
+            var totalHeight = $target.find("li").length * this.singleHeight; // 获取所有 li 的总高度
+            var bottom = (totalHeight - this.singleHeight) * -1; // 底部边界
+            var y = util.getY($target) - this.defalutY; // 获取本身偏移了多少 Y
+            var final = y + this.defalutY; // 默认值最终值
+            if (y < bottom) {
+                final = bottom + this.defalutY;
+            }
+            this.$el.css("transform", "translateY(" + final + "px)");
         },
         bind: function() {
             this.$parent.on({
@@ -388,6 +409,7 @@
                 }
                 if (self.currIndex !== index) {
                     self.$target.trigger("change", self.$el.parent().index());
+                    self.$el.trigger("change", self);
                 }
             }, 300);
         },
@@ -426,11 +448,15 @@
                 }
             });
         },
-        setData: function(data) {
+        setData: function(data, refresh) {
             this.data = data;
             if (data.length) {
                 this.$el.html(this.getListHtml(data));
-                this.initStyle();
+                if (refresh) {
+                    this.refresh();
+                } else {
+                    this.initStyle();
+                }
                 this.resetSingleSize();
             } else {
                 this.destroy();
@@ -443,10 +469,18 @@
 
     function DatePicker($target, opts) {
         opts = opts || {};
+        this.$container = $(".container"); // 最外层容器啦
         this.$target = $target;
         this.opts = opts;
-        this.formatStr = opts.formatStr || "yyyy-MM-dd hh:mm:ss";
         this.type = opts.type || "date";
+        this.id = opts.id ? opts.id : $target.attr("id");
+        this.selectText = opts.text || "text";
+        this.selectValue = opts.value || "value";
+        this.selectList = opts.list || "children";
+        this.formatStr = opts.formatStr || "yyyy-MM-dd hh:mm:ss";
+        this.hasDefault = false;
+        this.defaultText = "";
+        this.split = "-";
         this.list = [];
         this.data = [];
         this.init();
@@ -454,12 +488,64 @@
 
     DatePicker.prototype = {
         init: function() {
-            this.getRange();
-            this.getIndexList();
+            // 拷贝 picker 的大部分 function
+            this.copyFunction();
+            // 获取时间 上限 和 下限
+            this.getRangeData();
+            this.getFormatList();
             this.getData();
-            this.getPicker();
+            this.createEl();
+            this.createPicker();
+            // 绑定事件
+            this.bind();
         },
-        getRange: function() {
+        copyFunction: function() {
+            var picker = Picker.prototype;
+            this.preventDefault = picker.preventDefault.bind(this);
+            this.onTargetFocus = picker.onTargetFocus.bind(this);
+            this.onCancelBtnClick = picker.onCancelBtnClick.bind(this);
+            this.onConfirmBtnClick = picker.onConfirmBtnClick.bind(this);
+            this.show = picker.show.bind(this);
+            this.close = picker.close.bind(this);
+            this.createEl = picker.createEl.bind(this);
+            this.resetListSize = picker.resetListSize.bind(this);
+            this.setTargetData = picker.setTargetData.bind(this);
+            this.initStyle = picker.initStyle.bind(this);
+            this.setValue = picker.setValue.bind(this);
+            this.setText = picker.setText.bind(this);
+        },
+        bind: function() {
+            this.$target.on({
+                "focus": this.onTargetFocus.bind(this),
+                "change": this.onTargetChange.bind(this)
+            });
+            this.$cancelBtn.on("tap", this.onCancelBtnClick.bind(this));
+            this.$confirmBtn.on("tap", this.onConfirmBtnClick.bind(this));
+            this.$el.on("touchstart", this.preventDefault.bind(this));
+            this.$content.on("change", ".list", this.onListChange.bind(this));
+        },
+        onTargetChange(e, index) {
+
+        },
+        onListChange: function(e, targetList) {
+            var type = targetList.type;
+
+            // 如果是月份变化，则需要改变
+            if (type === 'month') {
+                var yearList = this.getList('year');
+                var monthList = targetList;
+                var dayList = this.getList('day');
+                this.data["day"] = this.getDayData(monthList.getValue(), yearList.getValue());
+                dayList.setData(this.data['day'], true);
+            } else if (type === 'year') {
+                var yearList = targetList;
+                var monthList = this.getList('month');
+                var dayList = this.getList('day');
+                this.data["day"] = this.getDayData(monthList.getValue(), yearList.getValue());
+                dayList.setData(this.data['day'], true);
+            }
+        },
+        getRangeData: function() {
             // 默认向前 20 年
             if (!this.opts.start) {
                 var date = new Date();
@@ -474,7 +560,7 @@
                 this.end = date;
             }
         },
-        getIndexList: function() {
+        getFormatList: function() {
             var hash = {};
             var list = [];
             hash[this.formatStr.indexOf("yyyy")] = 'yyyy';
@@ -490,47 +576,137 @@
                 list.push(hash[obj]);
             }
 
-            this.list = list;
+            this.formatList = list;
         },
         getData: function() {
-            var startYear = this.start.getFullYear();
-            var endYear = this.end.getFullYear();
-            var data = [];
+            var data = {};
             switch (this.type) {
                 case "date":
-                    // 添加年份
-                    for (var i = startYear; i < endYear; i++) {
-                        var year = {
-                            text: i,
-                            value: i,
-                            children: []
-                        }
-
-                        for (var j = 1; j < 13; j++) {
-                            var month = {
-                                text: j,
-                                value: j,
-                                children: []
-                            }
-                            for (var k = 1; k < 30; k++) {
-                                var day = {
-                                    text: k,
-                                    value: k
-                                }
-                                month.children.push(day);
-                            }
-                            year.children.push(month);
-                        }
-                        data.push(year);
-                    }
+                    data["year"] = this.getYearData();
+                    data["month"] = this.getMonthData();
+                    data["day"] = this.getDayData(this.start.getFullYear(), 1); // 默认 1 月份
                     break;
             }
             this.data = data;
-            this.opts.data = data;
         },
-        getPicker: function() {
-            this.picker = new Picker(this.$target, this.opts);
-        }
+        getYearData: function() {
+            var startYear = this.start.getFullYear();
+            var endYear = this.end.getFullYear();
+            var yearData = [];
+            // 添加年份
+            for (var i = startYear; i < endYear; i++) {
+                var year = {
+                    text: i,
+                    value: i
+                }
+                yearData.push(year);
+            }
+            return yearData;
+        },
+        getMonthData: function() {
+            var monthData = [];
+            for (var i = 1; i <= 12; i++) {
+                var month = {
+                    text: i,
+                    value: i
+                }
+                monthData.push(month);
+            }
+            return monthData;
+        },
+        getDayData: function(month, year) {
+            var dayData = [];
+            var max = 30;
+            switch (month) {
+                case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    max = 31;
+                    break;
+                case 2:
+                    max = this.isLeapYear(year) ? 29 : 28;
+                    break;
+                default:
+                    max = 30;
+                    break;
+            }
+            for (var i = 1; i <= max; i++) {
+                var day = {
+                    text: i,
+                    value: i
+                }
+                dayData.push(day);
+            }
+            return dayData;
+        },
+        isLeapYear: function(year) {
+            var d = new Date(year, 1, 29);
+            return d.getDate() === 29;
+        },
+        getList: function(type) {
+            for (var i = 0; i < this.list.length; i++) {
+                var targetList = this.list[i];
+                if (type === targetList.type) {
+                    return targetList;
+                }
+            }
+            return;
+        },
+        addList: function(data, type) {
+            this.list.push(new List(data, this, type));
+            this.resetListSize();
+        },
+        createPicker: function() {
+            for (var key in this.data) {
+                var value = this.data[key];
+                this.addList(value, key);
+            }
+        },
+        setData: function(d, type) {
+            var list = d.split(this.split);
+            var data = this.data;
+
+            // 寻找第一层
+            for (var i = 0; i < list.length; i++) {
+                var targetList = this.list[i];
+
+                // 如果不存在那一层，则添加那一层
+                if (!targetList) {
+                    this.addList(data);
+                    targetList = this.list[i];
+                }
+
+                // 滚动到指定位置
+                if (type === "text") {
+                    targetList.setText(list[i]);
+                } else {
+                    targetList.setValue(list[i]);
+                }
+
+                // 将数据指向到下一层
+                if (data[targetList.getIndex() - 1]) {
+                    data = data[targetList.getIndex() - 1][this.selectList];
+                }
+
+                // 展开下一层
+                if (data) {
+                    var nextList = this.list[i + 1];
+
+                    // 如果不存在下一层，则添加下一层
+                    if (!nextList) {
+                        this.addList(data);
+                        nextList = this.list[i + 1];
+                    }
+                }
+            }
+
+            // 将值赋值到文本框
+            this.setTargetData();
+        },
     }
 
     var util = {
