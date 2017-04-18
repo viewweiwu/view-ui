@@ -153,7 +153,7 @@
             var list = d.split(this.split);
             var data = this.data;
 
-            $.each(this.data, function(i, obj) => {
+            $.each(this.data, function(i, obj) {
 
             });
 
