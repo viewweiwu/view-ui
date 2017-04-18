@@ -77,6 +77,7 @@
             e.preventDefault();
             e.stopPropagation();
             this.setTargetData();
+            this.close();
         },
         onTargetChange: function(e, index) {
             if (this.list[index]) {
@@ -459,7 +460,7 @@
                 }
                 this.resetSingleSize();
             } else {
-                this.destroy();
+                // this.destroy();
             }
         },
         destroy: function() {
@@ -488,13 +489,15 @@
 
     DatePicker.prototype = {
         init: function() {
-            // 拷贝 picker 的大部分 function
+            // 拷贝 picker 的大部分 function ！！！！
             this.copyFunction();
             // 获取时间 上限 和 下限
             this.getRangeData();
-            this.getFormatList();
+            // 获取数据
             this.getData();
+            // 创建元素
             this.createEl();
+            // 创建 picker
             this.createPicker();
             // 绑定事件
             this.bind();
@@ -509,7 +512,6 @@
             this.close = picker.close.bind(this);
             this.createEl = picker.createEl.bind(this);
             this.resetListSize = picker.resetListSize.bind(this);
-            this.setTargetData = picker.setTargetData.bind(this);
             this.initStyle = picker.initStyle.bind(this);
             this.setValue = picker.setValue.bind(this);
             this.setText = picker.setText.bind(this);
@@ -517,15 +519,11 @@
         bind: function() {
             this.$target.on({
                 "focus": this.onTargetFocus.bind(this),
-                "change": this.onTargetChange.bind(this)
             });
             this.$cancelBtn.on("tap", this.onCancelBtnClick.bind(this));
             this.$confirmBtn.on("tap", this.onConfirmBtnClick.bind(this));
             this.$el.on("touchstart", this.preventDefault.bind(this));
             this.$content.on("change", ".list", this.onListChange.bind(this));
-        },
-        onTargetChange(e, index) {
-
         },
         onListChange: function(e, targetList) {
             var type = targetList.type;
@@ -535,13 +533,13 @@
                 var yearList = this.getList('year');
                 var monthList = targetList;
                 var dayList = this.getList('day');
-                this.data["day"] = this.getDayData(monthList.getValue(), yearList.getValue());
+                this.data["day"] = this.getDayData(yearList.getValue(), monthList.getValue());
                 dayList.setData(this.data['day'], true);
             } else if (type === 'year') {
                 var yearList = targetList;
                 var monthList = this.getList('month');
                 var dayList = this.getList('day');
-                this.data["day"] = this.getDayData(monthList.getValue(), yearList.getValue());
+                this.data["day"] = this.getDayData(yearList.getValue(), monthList.getValue());
                 dayList.setData(this.data['day'], true);
             }
         },
@@ -560,24 +558,6 @@
                 this.end = date;
             }
         },
-        getFormatList: function() {
-            var hash = {};
-            var list = [];
-            hash[this.formatStr.indexOf("yyyy")] = 'yyyy';
-            hash[this.formatStr.indexOf("MM")] = 'MM';
-            hash[this.formatStr.indexOf("dd")] = 'dd';
-            hash[this.formatStr.indexOf("hh")] = 'hh';
-            hash[this.formatStr.indexOf("mm")] = 'mm';
-            hash[this.formatStr.indexOf("ss")] = 'ss';
-
-            delete hash['-1'];
-
-            for (var obj in hash) {
-                list.push(hash[obj]);
-            }
-
-            this.formatList = list;
-        },
         getData: function() {
             var data = {};
             switch (this.type) {
@@ -586,66 +566,66 @@
                     data["month"] = this.getMonthData();
                     data["day"] = this.getDayData(this.start.getFullYear(), 1); // 默认 1 月份
                     break;
+                case "time":
+                    data["hour"] = this.getHourData();
+                    data["minute"] = this.getMinuteData();
+                    break;
+                case "datetime":
+                    data["year"] = this.getYearData();
+                    data["month"] = this.getMonthData();
+                    data["day"] = this.getDayData(this.start.getFullYear(), 1); // 默认 1 月份
+                    data["hour"] = this.getHourData();
+                    data["minute"] = this.getMinuteData();
+                    break;
             }
             this.data = data;
         },
         getYearData: function() {
             var startYear = this.start.getFullYear();
             var endYear = this.end.getFullYear();
-            var yearData = [];
-            // 添加年份
-            for (var i = startYear; i < endYear; i++) {
-                var year = {
-                    text: i,
-                    value: i
-                }
-                yearData.push(year);
-            }
-            return yearData;
+            return this.getListByMax(endYear, startYear);
         },
         getMonthData: function() {
-            var monthData = [];
-            for (var i = 1; i <= 12; i++) {
-                var month = {
-                    text: i,
-                    value: i
-                }
-                monthData.push(month);
-            }
-            return monthData;
+            return this.getListByMax(12);
         },
-        getDayData: function(month, year) {
-            var dayData = [];
-            var max = 30;
-            switch (month) {
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                case 8:
-                case 10:
-                case 12:
-                    max = 31;
-                    break;
-                case 2:
-                    max = this.isLeapYear(year) ? 29 : 28;
-                    break;
-                default:
-                    max = 30;
-                    break;
+        getDayData: function(year, month) {
+            var max = this.getDayMax(year, month);
+            return this.getListByMax(max);
+        },
+        getHourData: function() {
+            return this.getListByMax(23, 0);
+        },
+        getMinuteData: function() {
+            return this.getListByMax(59, 0);
+        },
+        getSecondData: function() {
+            return this.getListByMax(59, 0);
+        },
+        getListByMax: function(max, min) {
+            var result = [];
+            if (min === undefined) {
+                min = 1;
             }
-            for (var i = 1; i <= max; i++) {
-                var day = {
-                    text: i,
+            for (var i = min; i <= max; i++) {
+                var temp = {
+                    text: this.plusZero(i),
                     value: i
                 }
-                dayData.push(day);
+                result.push(temp);
             }
-            return dayData;
+            return result;
         },
         isLeapYear: function(year) {
             var d = new Date(year, 1, 29);
             return d.getDate() === 29;
+        },
+        getDayMax: function(year, month) {
+            var d = new Date(year, month, 1, 0, 0, 0);
+            var prevDay = new Date(d - 1000);
+            return prevDay.getDate();
+        },
+        plusZero: function(num) {
+            return num < 10 ? "0" + num : num;
         },
         getList: function(type) {
             for (var i = 0; i < this.list.length; i++) {
@@ -707,6 +687,48 @@
             // 将值赋值到文本框
             this.setTargetData();
         },
+        setTargetData: function() {
+            this.$target.val(this.getText());
+            this.$target.data("data-value", this.getValue());
+        },
+        getValue: function() {
+            var date = new Date();
+            $.each(this.list, function(i, obj) {
+                var targetList = obj;
+                if (targetList.type === "year") {
+                    date.setFullYear(targetList.getValue());
+                }
+                if (targetList.type === "month") {
+                    date.setMonth(targetList.getValue() + 1);
+                }
+                if (targetList.type === "day") {
+                    date.setDate(targetList.getValue());
+                }
+                if (targetList.type === "hour") {
+                    date.setHours(targetList.getValue());
+                }
+                if (targetList.type === "minute") {
+                    date.setMinutes(targetList.getValue());
+                }
+                if (targetList.type === "second") {
+                    date.setSeconds()(targetList.getValue());
+                }
+            });
+            return date;
+        },
+        getText: function() {
+            var str = this.formatStr;
+            var date = this.getValue();
+
+            str = str.replace(/yyyy|YYYY/g, date.getFullYear());
+            str = str.replace(/MM/g, this.plusZero(date.getMonth() + 1));
+            str = str.replace(/dd|DD/g, this.plusZero(date.getDate()));
+            str = str.replace(/hh|HH/g, this.plusZero(date.getHours()));
+            str = str.replace(/mm/g, this.plusZero(date.getMinutes()));
+            str = str.replace(/ss/g, this.plusZero(date.getSeconds()));
+
+            return str;
+        }
     }
 
     var util = {

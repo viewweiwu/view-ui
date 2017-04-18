@@ -20,24 +20,33 @@
         <main class="main">
             <div class="content">
                 <div class="list-cell cell-list field-list">
+                    <h2 class="title">默认</h2>
                     <div class="field">
                         <label class="label" for="fruit">水果：</label>
                         <input type="text" class="input" id="fruit" placeholder="请选择喜欢的水果">
                     </div>
-                    <h2 class="title">级联</h2>
+                    <h2 class="title red">级联</h2>
                     <div class="field">
                         <label class="label" for="city">城市：</label>
                         <input type="text" class="input" id="city" placeholder="请选择城市">
                     </div>
-                    <h2 class="title">级联设置默认值</h2>
+                    <h2 class="title blue">级联设置默认值</h2>
                     <div class="field">
                         <label class="label" for="city">城市：</label>
                         <input type="text" class="input" id="city2" placeholder="请选择城市">
                     </div>
-                    <h2 class="title">日期选择器</h2>
+                    <h2 class="title green">日期选择器</h2>
                     <div class="field">
-                        <label class="label" for="date">时间：</label>
+                        <label class="label" for="date">出生日期：</label>
                         <input type="text" class="input" id="date" placeholder="请选择出生日期">
+                    </div>
+                    <div class="field">
+                        <label class="label" for="time">几点吃饭：</label>
+                        <input type="text" class="input" id="time" placeholder="eat">
+                    </div>
+                    <div class="field">
+                        <label class="label" for="datetime">案发时间：</label>
+                        <input type="text" class="input" id="datetime" placeholder="真像永远只有一个？">
                     </div>
                 </div>
             </div>
@@ -79,7 +88,16 @@
 
             $("#date").datepicker({
                 type: "date",
-                formatStr: "MM-dd-yyyy"
+                formatStr: "yyyy年MM月dd日"
+            });
+
+            $("#time").datepicker({
+                type: "time",
+                formatStr: "HH:mm"
+            });
+
+            $("#datetime").datepicker({
+                type: "datetime"
             });
         });
     </script>
