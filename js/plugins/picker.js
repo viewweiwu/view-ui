@@ -152,6 +152,11 @@
         setData: function(d, type) {
             var list = d.split(this.split);
             var data = this.data;
+
+            $.each(this.data, function(i, obj) => {
+
+            });
+
             // 将值赋值到文本框
             this.setTargetData();
         },
