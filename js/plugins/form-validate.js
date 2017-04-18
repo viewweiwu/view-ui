@@ -78,4 +78,9 @@
             $target.data("validate", new Validate($target));
         });
     }
+
+    //触发
+    $.fn.getResult = function() {
+        return this.data("validate").getCheckResult();
+    }
 })(Zepto);

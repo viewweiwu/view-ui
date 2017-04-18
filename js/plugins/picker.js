@@ -10,8 +10,6 @@
         this.data = opts.data;
         this.list = [];
         this.split = " - ";
-        this.defaultText = "请选择";
-        this.hasDefault = opts.hasDefault === false ? false : true;
         this.init();
     }
 
@@ -19,6 +17,7 @@
         init: function() {
             this.createEl();
             this.addList(this.data);
+            this.onListChange(null, this.list[0]);
             this.initStyle();
             this.bind();
         },
@@ -52,12 +51,12 @@
         },
         bind: function() {
             this.$target.on({
-                "focus": this.onTargetFocus.bind(this),
-                "change": this.onTargetChange.bind(this)
+                "focus": this.onTargetFocus.bind(this)
             });
             this.$cancelBtn.on("tap", this.onCancelBtnClick.bind(this));
             this.$confirmBtn.on("tap", this.onConfirmBtnClick.bind(this));
             this.$el.on("touchstart", this.preventDefault.bind(this));
+            this.$content.on("change", ".list", this.onListChange.bind(this));
         },
         preventDefault: function(e) {
             e.preventDefault();
@@ -79,46 +78,25 @@
             this.setTargetData();
             this.close();
         },
-        onTargetChange: function(e, index) {
-            if (this.list[index]) {
-                var targetList = this.list[index];
-                var data;
-
-                if (this.hasDefault === true) {
-                    data = targetList.data[targetList.getIndex() - 1] && targetList.data[targetList.getIndex() - 1][this.selectList];
+        onListChange: function(e, targetList) {
+            var data = targetList.data[targetList.getIndex()][this.selectList];
+            if (data) {
+                var next = targetList.$parent.index() + 1;
+                var nextList = this.list[next];
+                if (nextList) {
+                    nextList.setData(data);
                 } else {
-                    data = targetList.data[targetList.getIndex()] && targetList.data[targetList.getIndex()][this.selectList];
+                    this.addList(data);
+                    nextList = this.list[next];
                 }
-
-                // 如果选择了初始选项，则销毁兄弟 list
-                if (targetList.getIndex() === 0 && targetList.getText() === this.defaultText) {
-                    $.each(this.list.slice(index + 1), function(i, obj) {
-                        obj.destroy();
-                    });
-                    this.list.length = index + 1;
-                    this.resetListSize();
-                    return;
-                }
-
-                // 如果对象存在，则扩展一层 list
-                if (data) {
-                    // 下层 list 如果已存在，则不销毁元素，而是重新设值, 并销毁下层之后的所有 list
-                    if (this.list[index + 1]) {
-                        this.list[index + 1].setData(data);
-                        $.each(this.list.slice(index + 2), function(i, obj) {
-                            obj.destroy();
-                        });
-                        this.list.length = index + 2;
-                        this.resetListSize();
-                    } else {
-                        // 否则销毁后面所有层的 list，并添加下层
-                        $.each(this.list.slice(index + 1), function(i, obj) {
-                            obj.destroy();
-                        });
-                        this.list.length = index + 1;
-                        this.addList(data);
-                    }
-                }
+                this.onListChange(e, nextList);
+            } else {
+                var next = targetList.$parent.index() + 1;
+                $.each(this.list.slice(next), function(i, obj) {
+                    obj.destroy();
+                });
+                this.list.length = next;
+                this.resetListSize();
             }
         },
         show: function() {
@@ -174,41 +152,6 @@
         setData: function(d, type) {
             var list = d.split(this.split);
             var data = this.data;
-
-            // 寻找第一层
-            for (var i = 0; i < list.length; i++) {
-                var targetList = this.list[i];
-
-                // 如果不存在那一层，则添加那一层
-                if (!targetList) {
-                    this.addList(data);
-                    targetList = this.list[i];
-                }
-
-                // 滚动到指定位置
-                if (type === "text") {
-                    targetList.setText(list[i]);
-                } else {
-                    targetList.setValue(list[i]);
-                }
-
-                // 将数据指向到下一层
-                if (data[targetList.getIndex() - 1]) {
-                    data = data[targetList.getIndex() - 1][this.selectList];
-                }
-
-                // 展开下一层
-                if (data) {
-                    var nextList = this.list[i + 1];
-
-                    // 如果不存在下一层，则添加下一层
-                    if (!nextList) {
-                        this.addList(data);
-                        nextList = this.list[i + 1];
-                    }
-                }
-            }
-
             // 将值赋值到文本框
             this.setTargetData();
         },
@@ -228,8 +171,6 @@
         this.$target = picker.$target;
         this.selectText = picker.selectText;
         this.selectValue = picker.selectValue;
-        this.defaultText = picker.defaultText;
-        this.hasDefault = picker.hasDefault;
         this.type = type; // 判断 datepicker 是什么类型的
         this.data = data;
         this.init();
@@ -269,9 +210,6 @@
         getListHtml: function(data) {
             var result = "";
             var self = this;
-            if (this.hasDefault) {
-                result += '<li class="item">' + this.defaultText + '</li>';
-            }
             $.each(data || [], function(i, obj) {
                 var text = "";
                 var value = "";
@@ -409,7 +347,6 @@
                     clearTimeout(self.timer);
                 }
                 if (self.currIndex !== index) {
-                    self.$target.trigger("change", self.$el.parent().index());
                     self.$el.trigger("change", self);
                 }
             }, 300);
@@ -479,8 +416,6 @@
         this.selectValue = opts.value || "value";
         this.selectList = opts.list || "children";
         this.formatStr = opts.formatStr || "yyyy-MM-dd hh:mm:ss";
-        this.hasDefault = false;
-        this.defaultText = "";
         this.split = "-";
         this.list = [];
         this.data = [];
