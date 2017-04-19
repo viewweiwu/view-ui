@@ -14,14 +14,12 @@
             <a href="index.html" class="link left">
                 <i class="iconfont">&#xe660;</i>
             </a>
-            <div class="center">
-                表单
-            </div>
+            <div class="center">表单</div>
             <span class="right"></span>
         </header>
         <main class="main">
             <div class="content">
-                <h2 class="title">贴近</h2>
+                <h2 class="title">基础</h2>
                 <div class="cell-list field-list has-border">
                     <div class="field">
                         <label class="label" for="username">账号：</label>
@@ -41,15 +39,8 @@
                         <label class="label" for="memo">备注：</label>
                         <textarea class="content" row="3" id="memo"></textarea>
                     </div>
-                    <div class="field">
-                        <label class="label">选项：</label>
-                        <div class="select-box">
-                            <div class="item active">第一项</div>
-                            <div class="item">第二项</div>
-                            <div class="item active">第三项</div>
-                        </div>
-                    </div>
                 </div>
+                <h2 class="title blue">多选</h2>
                 <div class="cell-list field-list has-border">
                     <div class="field">
                         <label class="label">多选1：</label>
@@ -73,7 +64,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="field">
+                        <label class="label">选项：</label>
+                        <div class="select-box">
+                            <div class="item active">第一项</div>
+                            <div class="item">第二项</div>
+                            <div class="item active">第三项</div>
+                        </div>
+                    </div>
                 </div>
+                <h2 class="title green">单选</h2>
                 <div class="cell-list field-list has-border">
                     <div class="field">
                         <label class="label">单选1：</label>
@@ -98,46 +98,12 @@
                         </div>
                     </div>
                 </div>
-                <h2 class="title blue">表单验证</h2>
-                <form action="" class="js-validate">
-                    <div class="cell-list field-list has-border">
-                        <div class="field">
-                            <label class="label" for="username">账号：</label>
-                            <input type="text" class="input" id="username" data-validate="empty" data-label="账号">
-                        </div>
-                        <div class="field">
-                            <label class="label" for="phone">手机号：</label>
-                            <input type="text" class="input" id="phone" data-validate="empty,phone" data-label="手机号">
-                        </div>
-                        <div class="field">
-                            <label class="label">密码：</label>
-                            <input type="password" id="login-passw" class="input" placeholder="请输入您的密码" value="" data-validate="empty" data-label="密码">
-                            <span class="right"><i class="iconfont">&#xe641;</i></span>
-                        </div>
-                        <div class="field">
-                            <label class="label">确认密码：</label>
-                            <input type="password" class="input" placeholder="请再次输入您的密码" value="" data-validate="empty,confpwd(#login-passw)" data-label="密码">
-                            <span class="right"><i class="iconfont">&#xe641;</i></span>
-                        </div>
-                    </div>
-                    <button class="btn btn-full btn-orange" type="submit">提交</button>
-                </form>
             </div>
         </main>
     </div>
 
     <script src="js/rem.js"></script>
     <script src="js/zepto.min.js"></script>
-    <script src="js/plugins/toast.js"></script>
-    <script src="js/plugins/validate.js"></script>
-    <script>
-        var $form = $('.js-validate');
-        $form.submit(function() {
-            $form.validate();
-            var checkResult = $form.getResult();
-            return checkResult ? true : false;
-        })
-    </script>
 </body>
 
 </html>

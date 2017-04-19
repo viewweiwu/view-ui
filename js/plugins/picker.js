@@ -51,8 +51,14 @@
         },
         bind: function() {
             this.$target.on("focus", this.events.onTargetFocus.bind(this));
-            this.$cancelBtn.on("tap", this.events.onCancelBtnClick.bind(this));
-            this.$confirmBtn.on("tap", this.events.onConfirmBtnClick.bind(this));
+            this.$cancelBtn.on({
+                "tap": this.events.onCancelBtnClick.bind(this),
+                "click": this.events.onCancelBtnClick.bind(this)
+            });
+            this.$confirmBtn.on({
+                "tap": this.events.onConfirmBtnClick.bind(this),
+                "click": this.events.onConfirmBtnClick.bind(this)
+            });
             this.$el.on("touchstart", this.events.preventDefault.bind(this));
             this.$content.on("change", ".list", this.events.onListChange.bind(this));
         },
@@ -215,6 +221,7 @@
         this.selectValue = picker.selectValue;
         this.type = type; // 判断 datepicker 是什么类型的
         this.data = data;
+        this.isMove = false;
         this.init();
     }
 
@@ -289,7 +296,12 @@
                 "touchstart": this.events.onStart.bind(this),
                 "touchmove": this.events.onMove.bind(this),
                 "touchend": this.events.onEnd.bind(this),
-                "touchcancel": this.events.onEnd.bind(this)
+                "touchcancel": this.events.onEnd.bind(this),
+                "mousedown": this.events.onStart.bind(this)
+            });
+            $('body').on({
+                "mousemove": this.events.onMove.bind(this),
+                "mouseup": this.events.onEnd.bind(this)
             });
         },
         getIndex: function() {
@@ -345,6 +357,17 @@
             return "success"
         },
         destroy: function() {
+            this.$parent.off({
+                "touchstart": List.events.onStart,
+                "touchmove": List.events.onMove,
+                "touchend": List.events.onEnd,
+                "touchcancel": List.events.onEnd,
+                "mousedown": List.events.onStart
+            });
+            $('body').off({
+                "mousemove": List.events.onMove,
+                "mouseup": List.events.onEnd
+            });
             this.$parent.remove();
         }
     }
@@ -355,11 +378,14 @@
          * 作用: 标记当前 list 的 pageY
          */
         onStart: function(e) {
-            var pageY = e.touches[0].pageY;
+            e.preventDefault();
+            e.stopPropagation();
+            var pageY = e.pageY || e.touches[0].pageY;
             this.pageY = pageY;
             this.startDate = new Date();
-            this.startY = util.getY(util.getTarget(e)) - this.defalutY;
+            this.startY = util.getY(this.$el) - this.defalutY;
             this.currIndex = this.getIndex();
+            this.isMove = true;
         },
         /**
          * 名称: 鼠标 touchmove 事件
@@ -368,8 +394,9 @@
         onMove: function(e) {
             e.preventDefault();
             e.stopPropagation();
-            var $target = util.getTarget(e);
-            var pageY = e.touches[0].pageY;
+            if (!this.isMove) return false;
+            var $target = this.$el;
+            var pageY = e.pageY || e.touches[0].pageY;
             var y = util.getY($target); // 获取之前的 translateY
             var final = pageY - this.pageY + y; // 比较差值并累加，计算出最终值
             $target.css({
@@ -383,8 +410,10 @@
          * 作用: 矫正最终的滚动值
          */
         onEnd: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             var self = this;
-            var $target = util.getTarget(e);
+            var $target = this.$el;
             var $li = $target.find("li");
             var totalHeight = $li.length * this.singleHeight; // 获取所有 li 的总高度
             var y = util.getY($target) - this.defalutY; // 获取本身偏移了多少 Y
@@ -439,6 +468,10 @@
                 "transform": "translate3d(0, " + final + "px, 0)",
                 "transition": "width, transform 300ms"
             });
+
+            this.isMove = false;
+
+            console.log(final);
 
             // 发布事件
             self.timer = setTimeout(function() {
@@ -682,7 +715,7 @@
                     date.setFullYear(targetList.getValue());
                 }
                 if (targetList.type === "month") {
-                    date.setMonth(targetList.getValue() + 1);
+                    date.setMonth(targetList.getValue() - 1);
                 }
                 if (targetList.type === "day") {
                     date.setDate(targetList.getValue());

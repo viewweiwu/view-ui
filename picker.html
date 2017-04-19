@@ -35,19 +35,6 @@
                         <label class="label" for="city">城市：</label>
                         <input type="text" class="input" id="city2" placeholder="请选择城市">
                     </div>
-                    <h2 class="title green">日期选择器</h2>
-                    <div class="field">
-                        <label class="label" for="date">出生日期：</label>
-                        <input type="text" class="input" id="date" placeholder="请选择出生日期">
-                    </div>
-                    <div class="field">
-                        <label class="label" for="time">几点吃饭：</label>
-                        <input type="text" class="input" id="time" placeholder="eat">
-                    </div>
-                    <div class="field">
-                        <label class="label" for="datetime">案发时间：</label>
-                        <input type="text" class="input" id="datetime" placeholder="真像永远只有一个？">
-                    </div>
                 </div>
             </div>
         </main>
@@ -73,8 +60,7 @@
                 }, {
                     text: "西瓜",
                     value: "23"
-                }],
-                hasDefault: false
+                }]
             });
             $("#city").picker({
                 data: cityData,
@@ -93,20 +79,6 @@
             $("#city2").data("picker").setValue("浙江 - 杭州 - 江干区");
             // 下面这个也可以调用
             // $("#city2").data("picker").setText("海南 - 五指山");
-
-            $("#date").datepicker({
-                type: "date",
-                formatStr: "yyyy年MM月dd日"
-            });
-
-            $("#time").datepicker({
-                type: "time",
-                formatStr: "HH:mm"
-            });
-
-            $("#datetime").datepicker({
-                type: "datetime"
-            });
         });
     </script>
 </body>

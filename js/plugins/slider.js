@@ -148,7 +148,6 @@
             this.pageX = pageX;
         },
         onEnd: function(e) {
-            console.log('end');
             var self = this;
             var x = util.getX(this.$pnl);
             var right = this.singleWidth * (this.$li.length - 1) * -1 // 右边界
