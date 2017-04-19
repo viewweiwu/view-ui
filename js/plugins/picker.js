@@ -17,7 +17,7 @@
         init: function() {
             this.createEl();
             this.addList(this.data);
-            this.onListChange(null, this.list[0]);
+            this.events.onListChange.apply(this, [null, this.list[0]]);
             this.initStyle();
             this.bind();
         },
@@ -50,62 +50,19 @@
             this.$decorate.height(this.list[0].getSingleHeight());
         },
         bind: function() {
-            this.$target.on({
-                "focus": this.onTargetFocus.bind(this)
-            });
-            this.$cancelBtn.on("tap", this.onCancelBtnClick.bind(this));
-            this.$confirmBtn.on("tap", this.onConfirmBtnClick.bind(this));
-            this.$el.on("touchstart", this.preventDefault.bind(this));
-            this.$content.on("change", ".list", this.onListChange.bind(this));
-        },
-        preventDefault: function(e) {
-            e.preventDefault();
-        },
-        onTargetFocus: function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.$target.blur();
-            this.show();
-        },
-        onCancelBtnClick: function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.close();
-        },
-        onConfirmBtnClick: function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.setTargetData();
-            this.close();
-        },
-        onListChange: function(e, targetList) {
-            var data = targetList.data[targetList.getIndex()][this.selectList];
-            if (data) {
-                var next = targetList.$parent.index() + 1;
-                var nextList = this.list[next];
-                if (nextList) {
-                    nextList.setData(data);
-                } else {
-                    this.addList(data);
-                    nextList = this.list[next];
-                }
-                this.onListChange(e, nextList);
-            } else {
-                var next = targetList.$parent.index() + 1;
-                $.each(this.list.slice(next), function(i, obj) {
-                    obj.destroy();
-                });
-                this.list.length = next;
-                this.resetListSize();
-            }
+            this.$target.on("focus", this.events.onTargetFocus.bind(this));
+            this.$cancelBtn.on("tap", this.events.onCancelBtnClick.bind(this));
+            this.$confirmBtn.on("tap", this.events.onConfirmBtnClick.bind(this));
+            this.$el.on("touchstart", this.events.preventDefault.bind(this));
+            this.$content.on("change", ".list", this.events.onListChange.bind(this));
         },
         show: function() {
             this.$el.css({
                 "background-color": "rgba(0, 0, 0, .5)",
-                "transform": "translateX(0)"
+                "transform": "translate3d(0, 0, 0)"
             });
             this.$pnl.css({
-                "transform": "translateY(0)"
+                "transform": "translate3d(0, 0, 0)"
             });
         },
         close: function() {
@@ -114,17 +71,20 @@
                 "background-color": "rgba(0, 0, 0, 0)"
             });
             this.$pnl.css({
-                "transform": "translateY(100%)"
+                "transform": "translate3d(0, 100%, 0)"
             });
             setTimeout(function() {
                 self.$el.css({
-                    "transform": "translateX(100%)"
+                    "transform": "translate3d(100%, 0, 0)"
                 })
             }, 300);
         },
         addList: function(data) {
-            this.list.push(new List(data, this));
-            this.resetListSize();
+            // 如果列表数据为空，则不添加
+            if (data && data.length) {
+                this.list.push(new List(data, this));
+                this.resetListSize();
+            }
         },
         resetListSize: function() {
             var self = this;
@@ -150,11 +110,28 @@
             this.$target.attr("data-value", value);
         },
         setData: function(d, type) {
+            var self = this;
             var list = d.split(this.split);
             var data = this.data;
 
-            $.each(this.data, function(i, obj) {
-
+            // 循环分割成 list 的数据
+            $.each(list || [], function(i, iObj) {
+                // 寻找 data 相等的值
+                $.each(data, function(j, jObj) {
+                    if (type === "text" && jObj[self.selectText] === iObj) { // text 相等
+                        var targetList = self.list[i]; // 获得对应的 list
+                        targetList.setText(iObj); // 滚动到指定文本位置
+                        data = targetList.data[targetList.getIndex()][self.selectList]; // 获取到数据
+                        self.events.onListChange.apply(self, [null, self.list[i]]); // 触发改变下层 list 数据
+                        return false;
+                    } else if (type === "value" && jObj[self.selectValue] === iObj) { // value 相等
+                        var targetList = self.list[i];
+                        targetList.setValue(iObj);
+                        data = targetList.data[targetList.getIndex()][self.selectList];
+                        self.events.onListChange.apply(self, [null, self.list[i]]);
+                        return false;
+                    }
+                });
             });
 
             // 将值赋值到文本框
@@ -167,6 +144,66 @@
             this.setData(text, "text");
         }
     };
+
+    Picker.prototype.events = {
+        preventDefault: function(e) {
+            e.preventDefault();
+        },
+        onTargetFocus: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.$target.blur();
+            this.show();
+        },
+        onCancelBtnClick: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.close();
+        },
+        onConfirmBtnClick: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.setTargetData();
+            this.close();
+        },
+        onListChange: function(e, targetList) {
+            var data;
+
+            if (targetList.data[targetList.getIndex()]) {
+                data = targetList.data[targetList.getIndex()][this.selectList];
+            }
+
+            if (data && data.length) {
+                var next = targetList.$parent.index() + 1;
+                var nextList = this.list[next];
+                var result;
+                if (nextList) {
+                    result = nextList.setData(data);
+                } else {
+                    this.addList(data);
+                    nextList = this.list[next];
+                }
+
+                // 如果下层列表数据为空，则删除下一层
+                if (result === 'empty') {
+                    this.list[this.list.length - 1].destroy();
+                    this.list.length -= 1;
+                    this.resetListSize();
+                } else {
+                    this.events.onListChange.apply(this, [e, nextList]);
+                }
+            } else {
+                var next = targetList.$parent.index() + 1;
+                $.each(this.list.slice(next), function(i, obj) {
+                    obj.destroy();
+                });
+                this.list.length = next;
+                this.resetListSize();
+            }
+        }
+    }
+
+
 
     function List(data, picker, type) {
         this.$container = picker.$container; // 最外层容器啦
@@ -233,7 +270,7 @@
          */
         initStyle: function() {
             var defalutY = this.singleHeight * 3;
-            this.$el.css("transform", "translateY(" + defalutY + "px)");
+            this.$el.css("transform", "translate3d(0, " + defalutY + "px, 0)");
             this.defalutY = defalutY;
         },
         refresh: function() {
@@ -245,16 +282,74 @@
             if (y < bottom) {
                 final = bottom + this.defalutY;
             }
-            this.$el.css("transform", "translateY(" + final + "px)");
+            this.$el.css("transform", "translate3d(0, " + final + "px, 0)");
         },
         bind: function() {
             this.$parent.on({
-                "touchstart": this.onStart.bind(this),
-                "touchmove": this.onMove.bind(this),
-                "touchend": this.onEnd.bind(this),
-                "touchcancel": this.onEnd.bind(this)
+                "touchstart": this.events.onStart.bind(this),
+                "touchmove": this.events.onMove.bind(this),
+                "touchend": this.events.onEnd.bind(this),
+                "touchcancel": this.events.onEnd.bind(this)
             });
         },
+        getIndex: function() {
+            var result = "";
+            var y = (util.getY(this.$el) - this.defalutY) * -1;
+            var index = Math.round(y / this.singleHeight);
+
+            return index;
+        },
+        getText: function() {
+            return this.$el.find(".item").eq(this.getIndex()).text();
+        },
+        getValue: function() {
+            return this.$el.find(".item").eq(this.getIndex()).data("value");
+        },
+        setIndex: function(index) {
+            var y = this.defalutY + index * this.singleHeight * -1;
+            this.$el.css("transform", "translate3d(0, " + y + "px, 0)");
+        },
+        setText: function(text) {
+            var self = this;
+            $.each(this.data, function(i, obj) {
+                if (obj[self.selectText] === text) {
+                    self.setIndex(i);
+                    return false;
+                }
+            });
+        },
+        setValue: function(value) {
+            var self = this;
+            $.each(this.data, function(i, obj) {
+                if (obj[self.selectValue] === value) {
+                    self.setIndex(i);
+                    return false;
+                }
+            });
+        },
+        setData: function(data, refresh) {
+            this.data = data;
+            if (data) {
+                if (data.length) {
+                    this.$el.html(this.getListHtml(data));
+                    if (refresh) {
+                        this.refresh();
+                    } else {
+                        this.initStyle();
+                    }
+                    this.resetSingleSize();
+                } else {
+                    return "empty";
+                }
+            }
+            return "success"
+        },
+        destroy: function() {
+            this.$parent.remove();
+        }
+    }
+
+    List.prototype.events = {
         /**
          * 名称: 鼠标 touchstart 事件
          * 作用: 标记当前 list 的 pageY
@@ -278,7 +373,7 @@
             var y = util.getY($target); // 获取之前的 translateY
             var final = pageY - this.pageY + y; // 比较差值并累加，计算出最终值
             $target.css({
-                "transform": "translateY(" + final + "px)",
+                "transform": "translate3d(0, " + final + "px, 0)",
                 "transition": "width 300ms"
             });
             this.pageY = pageY; // 重新标记 pageY
@@ -341,7 +436,7 @@
 
             // 进行滚动
             $target.css({
-                "transform": "translateY(" + final + "px)",
+                "transform": "translate3d(0, " + final + "px, 0)",
                 "transition": "width, transform 300ms"
             });
 
@@ -355,58 +450,6 @@
                     self.$el.trigger("change", self);
                 }
             }, 300);
-        },
-        getIndex: function() {
-            var result = "";
-            var y = (util.getY(this.$el) - this.defalutY) * -1;
-            var index = Math.round(y / this.singleHeight);
-
-            return index;
-        },
-        getText: function() {
-            return this.$el.find(".item").eq(this.getIndex()).text();
-        },
-        getValue: function() {
-            return this.$el.find(".item").eq(this.getIndex()).data("value");
-        },
-        setIndex: function(index) {
-            var y = this.defalutY + (index + 1) * this.singleHeight * -1;
-            this.$el.css("transform", "translateY(" + y + "px)");
-        },
-        setText: function(text) {
-            var self = this;
-            $.each(this.data, function(i, obj) {
-                if (obj[self.selectText] === text) {
-                    self.setIndex(i);
-                    return false;
-                }
-            });
-        },
-        setValue: function(value) {
-            var self = this;
-            $.each(this.data, function(i, obj) {
-                if (obj[self.selectValue] === value) {
-                    self.setIndex(i);
-                    return false;
-                }
-            });
-        },
-        setData: function(data, refresh) {
-            this.data = data;
-            if (data.length) {
-                this.$el.html(this.getListHtml(data));
-                if (refresh) {
-                    this.refresh();
-                } else {
-                    this.initStyle();
-                }
-                this.resetSingleSize();
-            } else {
-                // this.destroy();
-            }
-        },
-        destroy: function() {
-            this.$parent.remove();
         }
     }
 
@@ -444,10 +487,10 @@
         },
         copyFunction: function() {
             var picker = Picker.prototype;
-            this.preventDefault = picker.preventDefault.bind(this);
-            this.onTargetFocus = picker.onTargetFocus.bind(this);
-            this.onCancelBtnClick = picker.onCancelBtnClick.bind(this);
-            this.onConfirmBtnClick = picker.onConfirmBtnClick.bind(this);
+            this.onTargetFocus = picker.events.onTargetFocus.bind(this);
+            this.onCancelBtnClick = picker.events.onCancelBtnClick.bind(this);
+            this.onConfirmBtnClick = picker.events.onConfirmBtnClick.bind(this);
+            this.preventDefault = picker.events.preventDefault.bind(this);
             this.show = picker.show.bind(this);
             this.close = picker.close.bind(this);
             this.createEl = picker.createEl.bind(this);
@@ -690,7 +733,7 @@
          * 作用: 获取 translateY 数值，如果没有就是 0
          */
         getY: function($target) {
-            return parseInt($target.css("transform").slice(11)) || 0;
+            return parseInt($target.css("transform").slice(17)) || 0;
         }
     }
 

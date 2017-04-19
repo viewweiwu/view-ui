@@ -1,0 +1,35 @@
+.title {
+  height: 0.5rem;
+  padding: 0 0.2rem 0 0.24rem;
+  font-size: 0.3rem;
+  margin: 0.2rem;
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.title.thin {
+  font-weight: normal;
+}
+.title:before {
+  content: "";
+  top: 15%;
+  left: 0;
+  width: 0.1rem;
+  height: 70%;
+  border-radius: 0.1rem;
+  background-color: #ff6600;
+  position: absolute;
+}
+.title.none {
+  padding-left: 0;
+}
+.title.green:before {
+  background-color: #9acd32;
+}
+.title.blue:before {
+  background-color: #66ccff;
+}
+.title.red:before {
+  background-color: #ff0000;
+}
