@@ -5,13 +5,38 @@
         this.$pnl = $el.find(">ul").eq(0);
         this.$li = this.$pnl.find(">li");
         this.$img = this.$li.find("img");
+        this.type = opts.type || "slide";
         this.isMove = false;
+
+        // 下面的小点点
+        this.indicators = {
+            show: true,
+            position: "out bottom",
+            type: "point"
+        };
+
+        if (opts.indicators) {
+            if (opts.indicators.show === false) {
+                this.indicators.show = false;
+            }
+            if (opts.indicators.position) {
+                this.indicators.position = opts.indicators.position;
+            }
+            if (opts.indicators.type) {
+                this.indicators.type = opts.indicators.type;
+            }
+        }
+
         this.init();
     }
 
     Slider.prototype = {
         init: function() {
+            // 初始化宽度
             this.initStyle();
+            // 创建下面的小点点
+            this.createIndicators();
+            // 事件绑定
             this.bind();
         },
         initStyle: function() {
@@ -24,6 +49,37 @@
             this.singleWidth = this.$el.width();
             this.$pnl.width(this.singleWidth * this.$li.length);
             this.$li.width(this.singleWidth);
+        },
+        createIndicators: function() {
+            // i 表示 indicators 的简写
+            var i = this.indicators;
+            if (i.show === false) return;
+            var html = this.getIndicatorsHtml(i.type, this.$li.length);
+            this.$el.append(html);
+            this.$i = this.$el.find(".indicators");
+            this.setIndicatorsActive();
+        },
+        getIndicatorsHtml: function(type, length) {
+            var html = "";
+
+            html += '<div class="indicators">';
+            for (var i = 0; i < length; i++) {
+                switch (type) {
+                    case "number":
+                        html += '<div class="item">' + util.plusZero(i) + '</div>';
+                        break;
+                    case "pointer":
+                    default:
+                        html += '<div class="item"></div>';
+                        break;
+                }
+            }
+            html += '</div>';
+
+            return html;
+        },
+        setIndicatorsActive: function() {
+            this.$i.find(".item").eq(this.getIndex()).addClass("active").siblings(".acitve").removeClass(".active");
         },
         bind: function() {
             this.$el.on({
@@ -38,6 +94,13 @@
                 "mouseup": this.events.onEnd.bind(this)
             });
             $(window).on("resize", this.events.resetSize.bind(this));
+        },
+        getIndex: function() {
+            var result = "";
+            var y = util.getX(this.$el) * -1;
+            var index = Math.round(y / this.singleWidth);
+
+            return index;
         },
         destroy: function() {
             this.$el.removeClass("slider");
@@ -85,6 +148,7 @@
             this.pageX = pageX;
         },
         onEnd: function(e) {
+            console.log('end');
             var self = this;
             var x = util.getX(this.$pnl);
             var right = this.singleWidth * (this.$li.length - 1) * -1 // 右边界
@@ -96,10 +160,20 @@
             var dateDiff = new Date - this.startDate;
             var diff = 0; // 矫正差值
 
+            // 矫正差值
+            diff = final % this.singleWidth;
+
             // 快划
             if (dateDiff < 150 && Math.abs(diffX) > this.singleWidth / 6) {
-                final -= this.singleWidth * direction;
+                if (direction > 0) {
+                    final -= this.singleWidth
+                }
+            } else if (Math.abs(diff) > this.singleWidth / 2) { // 矫正
+                final -= this.singleWidth;
             }
+
+            // 减去冗余
+            final -= diff;
 
             // 矫正边界
             if (final > 0) {
@@ -108,20 +182,15 @@
                 final = right;
             }
 
-            // 矫正差值
-            diff = final % this.singleWidth;
-
-            if (Math.abs(diff) > this.singleWidth / 2) {
-                final -= this.singleWidth;
-            }
-            // 减去冗余
-            final -= diff;
-
             // 设置最终位置
             this.$pnl.css({
                 "transform": "translate3d(" + final + "px, 0, 0)",
                 "transition": "transform 300ms"
             });
+
+            if (this.indicators.show === true) {
+                this.setIndicatorsActive();
+            }
 
             this.page = page;
             this.isMove = false;
@@ -133,7 +202,8 @@
                     clearTimeout(self.resetTimer);
                 }
                 self.initWidth();
-                self.onEnd();
+                self.singleWidth = self.$el.width();
+                self.events.onEnd.apply(self, [null]);
             }, 100);
         }
     }
@@ -141,6 +211,9 @@
     var util = {
         getX: function($target) {
             return parseInt($target.css("transform").slice(12)) || 0;
+        },
+        plusZero: function(num) {
+            return num < 10 ? "0" + num : num;
         }
     }
 

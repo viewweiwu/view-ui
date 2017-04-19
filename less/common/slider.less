@@ -1,11 +1,10 @@
 .slider {
     width: 100%;
-    height: @size * 5;
     overflow: hidden;
     position: relative;
     .slider-pnl {
         width: 400%;
-        height: 100%;
+        height: @size * 5;
         overflow: hidden;
         li {
             width: 25%;
@@ -14,6 +13,23 @@
             img {
                 width: 100%;
                 height: 100%;
+            }
+        }
+    }
+    .indicators {
+        width: 100%;
+        .flexCenter();
+        position: relative;
+        .item {
+            width: @space;
+            height: @space;
+            margin: @space @space / 2;
+            .radius();
+            .border();
+            background-color: @bg-dark;
+            &.active {
+                background-color: @mainColor;
+                border-color: @mainColor;
             }
         }
     }
