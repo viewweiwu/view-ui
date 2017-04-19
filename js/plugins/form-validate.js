@@ -10,43 +10,53 @@
 
     Validate.prototype = {
         init: function() {
+            this.getCheckResult();
+        },
+        getCheckResult: function() {
+            var result = this.setCheck();
+            return result;
+        },
+        setCheck: function() {
             var self = this;
-            var checkresult = true;
+            var checkResult = true;
             $.each(this.inputArr, function(i, iObj) {
-                // var $target = $(iObj);
-                self.ruleArr = $(iObj).attr('data-validate').split(','); //找到这些input框的验证值 
-                self.inputValue = iObj.value; //找到这些input框的值
-                self.labelText = $('label[for=' + $(iObj).attr('id') + ']').html().split('：')[0]; //找到这些input框的值
+                var $target = $(iObj);
+                self.ruleArr = $target.attr('data-validate').split(','); //找到这些input框的验证值 
+                self.inputValue = $target.val(); //找到这些input框的值
+                self.labelText = $target.data("label") || ''; //找到这些input框的值
                 // $target.siblings("label").text().repalce('：', '');
                 $.each(self.ruleArr, function(j, jObj) {
-                    checkresult = self.checkbind(jObj, self.inputValue, self.labelText);
-                    if (!checkresult) {
-                        return false;
-                    }
+                    checkResult = self.checkBind(jObj, self.inputValue, self.labelText);
+                    return !checkResult ? false : true;
                 })
-                if (!checkresult) {
-                    return false;
-                }
+                return !checkResult ? false : true;
             })
-
+            return checkResult
         },
         showTip: function(status, label) {
-            if (status == 'empty') {
-                $.Toast({
-                    position: "center",
-                    content: label + '不能为空'
-                });
-                return false;
-            } else {
-                $.Toast({
-                    position: "center",
-                    content: 'lalala'
-                });
-            }
+            var tip = this.setTips(status, label);
+            $.Toast({
+                position: "center",
+                content: tip
+            });
+            return false;
         },
-        checkbind: function(rule, value, label) {
-            var checkempty = true;
+        setTips: function(status, label) {
+            validateTips = {
+                empty: label + '不能为空',
+                phone: '请输入正确的手机格式',
+                email: '请输入正确的邮箱格式',
+                tel: '请输入正确的固话格式',
+                number: '请输入正确的数字',
+                integer: '请输入整数',
+                url: '请输入链接',
+                password: '请输入6到30位密码',
+            }
+            return validateTips[status];
+        },
+        checkBind: function(rule, value, label) {
             var self = this;
+            value = $.trim(value);
             /**
              * 文本格式验证正则表达式
              */
@@ -60,6 +70,7 @@
                 url: /^[a-zA-z]+:\/\/(\w+(-\w+)*)(\.(\w+(-\w+)*))*/, // 链接
                 password: /^[\w~!@#$%^&*()_+{}:"<>?\-=[\];\',.\/]{6,30}$/ // 密码
             };
+
             var testRule = regex[rule].test(value);
             if (testRule == false) {
                 self.showTip(rule, label);
@@ -77,9 +88,8 @@
             var $target = $(obj);
             $target.data("validate", new Validate($target));
         });
-    }
 
-    //触发
+    }
     $.fn.getResult = function() {
         return this.data("validate").getCheckResult();
     }
