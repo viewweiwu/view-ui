@@ -17,6 +17,7 @@
             return result;
         },
         setCheck: function() {
+            //返回验证结果
             var self = this;
             var checkResult = true;
             $.each(this.inputArr, function(i, iObj) {
@@ -51,12 +52,14 @@
                 integer: '请输入整数',
                 url: '请输入链接',
                 password: '请输入6到30位密码',
+                confpwd: '两次输入的密码不一致'
             }
             return validateTips[status];
         },
         checkBind: function(rule, value, label) {
             var self = this;
-            value = $.trim(value);
+            value = $.trim(value); //去掉首尾空格
+            var testRule = true;
             /**
              * 文本格式验证正则表达式
              */
@@ -71,15 +74,21 @@
                 password: /^[\w~!@#$%^&*()_+{}:"<>?\-=[\];\',.\/]{6,30}$/ // 密码
             };
 
-            var testRule = regex[rule].test(value);
+            if (rule.search(/confpwd/) > -1) {
+                var ele = /confpwd\((.*)\)/.exec(rule)[1];
+                testRule = value == $(ele).val();
+                rule = 'confpwd';
+            } else {
+                testRule = regex[rule].test(value);
+            }
+
             if (testRule == false) {
                 self.showTip(rule, label);
                 return false;
             } else {
                 return true
             }
-
-        }
+        },
     }
 
     //触发

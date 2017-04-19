@@ -77,10 +77,17 @@
                 hasDefault: false
             });
             $("#city").picker({
-                data: cityData
+                data: cityData,
+                text: "name",
+                value: "name",
+                list: "sub",
+
             });
             $("#city2").picker({
-                data: cityData
+                data: cityData,
+                text: "name",
+                value: "name",
+                list: "sub",
             });
 
             $("#city2").data("picker").setText("浙江省 - 杭州市 - 江干区");
