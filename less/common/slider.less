@@ -18,18 +18,33 @@
     }
     .indicators {
         width: 100%;
-        .flexCenter();
+        height: @size * 2 / 3;
+        z-index: 1;
         position: relative;
-        .indicators-pnl {
-            
+        &.number {
+            .item {
+                padding-top: 0;
+                padding-bottom: 0;
+                background-color: transparent;
+                &.active {
+                    color: @mainColor;
+                    background-color: transparent;
+                }
+            }
+        }
+        .indicators-list {
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
         }
         .item {
-            width: @space;
-            height: @space;
-            margin: @space @space / 2;
+            margin: @space / 2;
+            padding: @space / 2;
             .radius();
             background-color: @bg-dark;
             transition: background 300ms;
+            float: left;
             &.active {
                 background-color: @mainColor;
             }

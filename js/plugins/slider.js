@@ -2,7 +2,7 @@
     function Slider($el, opts) {
         opts = opts || {};
         this.$el = $el;
-        this.$pnl = $el.find(">ul").eq(0);
+        this.$pnl = this.$el.find(">ul").eq(0);
         this.$li = this.$pnl.find(">li");
         this.$img = this.$li.find("img");
         this.type = opts.type || "slide"; // 默认动画类型 slider
@@ -32,8 +32,8 @@
         // 下面的小点点
         this.indicators = {
             show: true,
-            position: "out bottom",
-            type: "point"
+            position: "inset bottom-right",
+            type: "number"
         };
 
         // 读取 opts 的 indicators 配置
@@ -96,7 +96,9 @@
             var html = this.getIndicatorsHtml(i.type, this.$li.length);
             this.$el.append(html);
             this.$i = this.$el.find(".indicators");
+            this.indicators.type === "number" && this.$i.addClass("number");
             this.setIndicatorsActive();
+            this.setIndicatorsPosition(this.indicators.position);
         },
         /**
          * 名称: 获取 indicators 的 html
@@ -107,10 +109,11 @@
             var html = "";
 
             html += '<div class="indicators">';
+            html += '<div class="indicators-list">';
             for (var i = 0; i < length; i++) {
                 switch (type) {
                     case "number":
-                        html += '<div class="item">' + util.plusZero(i) + '</div>';
+                        html += '<div class="item">' + (i + 1) + '</div>';
                         break;
                     case "pointer":
                     default:
@@ -118,6 +121,7 @@
                         break;
                 }
             }
+            html += '</div>';
             html += '</div>';
 
             return html;
@@ -129,6 +133,192 @@
         setIndicatorsActive: function() {
             if (this.indicators.show !== true) return;
             this.$i.find(".item").eq(this.getIndex()).addClass("active").siblings(".active").removeClass("active");
+        },
+        /**
+         * 名称: 设定 indicators 的 position
+         * 作用: 根据 indicators 的 config 来决定位置
+         */
+        setIndicatorsPosition: function(position) {
+            var self = this;
+            var $i = this.$i;
+            var list = position.split(" ");
+            var style = {};
+            var listStyle = {};
+            var changeListStyle = false;
+            var size = $i.height() > $i.width() ? $i.width() : $i.height();
+
+            var config = {
+                top: function() {
+                    style.top = 0;
+                    style.bottom = 0;
+                    style.width = "100%";
+                    style.height = size;
+                    $i.prependTo(self.$el);
+                },
+                left: function() {
+                    style.top = 0;
+                    style.left = 0;
+                    style.width = size;
+                    style.height = "100%";
+                    style.position = 'absolute';
+                },
+                right: function() {
+                    style.top = 0;
+                    style.left = 'auto';
+                    style.right = 0;
+                    style.width = size;
+                    style.height = "100%";
+                    style.position = 'absolute';
+                },
+                bottom: function() {
+                    style.top = 'auto';
+                    style.left = 0;
+                    style.bottom = 0;
+                    style.width = "100%";
+                    style.height = size;
+                    $i.appendTo(self.$el);
+                },
+                topLeft: function() {
+                    this.top();
+                    style.position = 'absolute';
+                    listStyle = {
+                        'top': 'auto',
+                        'left': 'auto',
+                        'transform': 'translate3d(0, 0, 0)'
+                    };
+                    changeListStyle = true;
+                },
+                topRight: function() {
+                    this.top();
+                    style.position = 'absolute';
+                    listStyle = {
+                        'top': 'auto',
+                        'left': 'auto',
+                        'right': '0',
+                        'transform': 'translate3d(0, 0, 0)'
+                    };
+                    changeListStyle = true;
+                },
+                leftTop: function() {
+                    this.left();
+                    style.position = 'absolute';
+                    listStyle = {
+                        'top': '.5em',
+                        'left': '.5em',
+                        'transform': 'translate3d(0, 0, 0)'
+                    }
+                    changeListStyle = true;
+                },
+                leftBottom: function() {
+                    this.left();
+                    style.position = 'absolute';
+                    listStyle = {
+                        'top': 'auto',
+                        'left': '.5em',
+                        'bottom': '.5em',
+                        'transform': 'translate3d(0, 0, 0)'
+                    }
+                    changeListStyle = true;
+                },
+                rightTop: function() {
+                    this.right();
+                    style.position = 'absolute';
+                    listStyle = {
+                        'top': '.5em',
+                        'left': '1em',
+                        'transform': 'translate3d(0, 0, 0)'
+                    }
+                    changeListStyle = true;
+                },
+                rightBottom: function() {
+                    this.right();
+                    style.position = 'absolute';
+                    listStyle = {
+                        'top': 'auto',
+                        'left': '1em',
+                        'right': '0',
+                        'bottom': '.5em',
+                        'transform': 'translate3d(0, 0, 0)'
+                    }
+                    changeListStyle = true;
+                },
+                bottomLeft: function() {
+                    this.bottom();
+                    style.position = 'absolute';
+                    listStyle = {
+                        'top': 'auto',
+                        'left': 'auto',
+                        'bottom': '0',
+                        'transform': 'translate3d(0, 0, 0)'
+                    };
+                    changeListStyle = true;
+                },
+                bottomRight: function() {
+                    this.bottom();
+                    style.position = 'absolute';
+                    listStyle = {
+                        'top': 'auto',
+                        'left': 'auto',
+                        'right': '0',
+                        'bottom': '0',
+                        'transform': 'translate3d(0, 0, 0)'
+                    };
+                    changeListStyle = true;
+                }
+            }
+
+            $.each(list || [], function(i, obj) {
+                switch (obj) {
+                    case "inset":
+                        style.position = 'absolute';
+                        break;
+                    case "out":
+                        style.position = 'relative';
+                        break;
+                    case "top":
+                        config.top();
+                        break;
+                    case "right":
+                        config.right();
+                        break;
+                    case "left":
+                        config.left();
+                        break;
+                        break;
+                    case "bottom":
+                        config.bottom();
+                        break;
+                    case "top-left":
+                        config.topLeft();
+                        break;
+                    case "top-right":
+                        config.topRight();
+                        break;
+                    case "left-top":
+                        config.leftTop();
+                        break;
+                    case "left-bottom":
+                        config.leftBottom();
+                        break;
+                    case "right-top":
+                        config.rightTop();
+                        break;
+                    case "right-bottom":
+                        config.rightBottom();
+                        break;
+                    case "bottom-left":
+                        config.bottomLeft();
+                        break;
+                    case "bottom-right":
+                        config.bottomRight();
+
+                }
+            });
+
+            $i.css(style);
+            if (changeListStyle) {
+                $i.find('.indicators-list').css(listStyle);
+            }
         },
         /**
          * 名称: 绑定事件
@@ -356,7 +546,8 @@
                     clearTimeout(self.resetTimer);
                 }
                 self.initWidth();
-                self.singleWidth = self.$el.width();
+                self.clearLoop();
+                self.isMove = true;
                 self.events.onEnd.apply(self, [null]);
             }, 100);
         }
