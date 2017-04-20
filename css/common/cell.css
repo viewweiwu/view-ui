@@ -134,6 +134,9 @@
   cursor: pointer;
   background-color: #fff;
 }
+.cell-list.field-list .field.bg-warning {
+  background-color: rgba(255, 0, 0, 0.2);
+}
 .cell-list.field-list .field:last-child {
   border-bottom: none;
 }
@@ -150,6 +153,7 @@
   line-height: inherit;
   font-size: inherit;
   border: none;
+  background-color: initial;
 }
 .cell-list.field-list .field .label {
   width: 1.5rem;
@@ -170,6 +174,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  background-color: initial;
 }
 .cell-list.field-list .field .right {
   height: 100%;
