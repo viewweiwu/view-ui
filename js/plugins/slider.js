@@ -5,8 +5,29 @@
         this.$pnl = $el.find(">ul").eq(0);
         this.$li = this.$pnl.find(">li");
         this.$img = this.$li.find("img");
-        this.type = opts.type || "slide";
-        this.isMove = false;
+        this.type = opts.type || "slide"; // 默认动画类型 slider
+        this.isMove = false; // 处于移动状态？
+
+        // 自动循环
+        this.loop = {
+            enabled: true,
+            time: 2000,
+            speed: 300
+        }
+
+        // 读取 opts 的 loop 配置
+        if (opts.loop) {
+            var l = opts.loop;
+            if (l.enabled === false) {
+                this.loop.enabled = false;
+            }
+            if (l.time >= 0) {
+                this.loop.time = l.time;
+            }
+            if (l.speed >= 0) {
+                this.loop.speed = l.speed;
+            }
+        }
 
         // 下面的小点点
         this.indicators = {
@@ -15,18 +36,21 @@
             type: "point"
         };
 
+        // 读取 opts 的 indicators 配置
         if (opts.indicators) {
-            if (opts.indicators.show === false) {
+            var i = opts.indicators;
+            if (i.show === false) {
                 this.indicators.show = false;
             }
-            if (opts.indicators.position) {
-                this.indicators.position = opts.indicators.position;
+            if (i.position) {
+                this.indicators.position = i.position;
             }
-            if (opts.indicators.type) {
-                this.indicators.type = opts.indicators.type;
+            if (i.type) {
+                this.indicators.type = i.type;
             }
         }
 
+        // 初始化
         this.init();
     }
 
@@ -38,18 +62,33 @@
             this.createIndicators();
             // 事件绑定
             this.bind();
+            // 是否需要循环？
+            this.doAutoLoop();
         },
+        /**
+         * 名称: 初始化样式
+         * 作用: 添加需要的 class 样式之后，初始化宽度
+         */
         initStyle: function() {
             this.$el.addClass("slider");
             this.$pnl.addClass("slider-pnl");
             this.$img.attr("draggable", false);
             this.initWidth();
         },
+        /**
+         * 名称: 初始化宽度
+         * 作用: 初始化每一副画面的 宽度
+         * 其他: 计算出单个 width, 并作为单位 - singleWidth 
+         */
         initWidth: function() {
             this.singleWidth = this.$el.width();
             this.$pnl.width(this.singleWidth * this.$li.length);
             this.$li.width(this.singleWidth);
         },
+        /**
+         * 名称: 创建 indicators
+         * 作用: 在页面添加一个 indicators 并且默认定向到第一页
+         */
         createIndicators: function() {
             // i 表示 indicators 的简写
             var i = this.indicators;
@@ -59,6 +98,11 @@
             this.$i = this.$el.find(".indicators");
             this.setIndicatorsActive();
         },
+        /**
+         * 名称: 获取 indicators 的 html
+         * 作用: 返回由 indicators config 生成的 html
+         * return: html(stirng)
+         */
         getIndicatorsHtml: function(type, length) {
             var html = "";
 
@@ -78,9 +122,18 @@
 
             return html;
         },
+        /**
+         * 名称: 设定 indicators 的 active 样式
+         * 作用: 取得当前页数，并给当前页数对应的 indicators 添加 active 样式
+         */
         setIndicatorsActive: function() {
+            if (this.indicators.show !== true) return;
             this.$i.find(".item").eq(this.getIndex()).addClass("active").siblings(".active").removeClass("active");
         },
+        /**
+         * 名称: 绑定事件
+         * 作用: 被绑定的事件在 Slider.events 里面
+         */
         bind: function() {
             this.$el.on({
                 "touchstart": this.events.onStart.bind(this),
@@ -95,6 +148,11 @@
             });
             $(window).on("resize", this.events.resetSize.bind(this));
         },
+        /**
+         * 名称: 获取页数
+         * 作用: 计算出当前第几页
+         * return:  number (0 - max)
+         */
         getIndex: function() {
             var result = "";
             var y = util.getX(this.$pnl) * -1;
@@ -102,6 +160,80 @@
 
             return index;
         },
+        /**
+         * 名称: 跳转到的页数
+         * 作用: 跳转的指定页数，并执行动画
+         * 参数: i (0 - max), speed 执行翻页的时间 
+         */
+        setIndex: function(i, speed) {
+            var final = i * this.singleWidth * -1;
+            speed = speed >= 0 ? speed : 0;
+            // 设置位置
+            this.$pnl.css({
+                "transform": "translate3d(" + final + "px, 0, 0)",
+                "transition": "transform " + speed + "ms"
+            });
+            // 设置点的样式
+            this.setIndicatorsActive();
+        },
+        /**
+         * 名称: 上一页
+         * 作用: 把当前的页数定位到上一页，如果到末页则定向到最后一页
+         */
+        prevPage: function() {
+            var page = this.getIndex();
+            // 往下翻页
+            page -= 1;
+            // 最后一页就滚到第一页
+            if (page < 0) {
+                page = this.$li.length - 1;
+            }
+            // 设置页数
+            this.setIndex(page, this.loop.speed);
+        },
+        /**
+         * 名称: 下一页
+         * 作用: 把当前的页数定位到下一页，如果到末页则定向到第一页
+         */
+        nextPage: function() {
+            var page = this.getIndex();
+            // 往下翻页
+            page += 1;
+            // 最后一页就滚到第一页
+            if (page > this.$li.length - 1) {
+                page = 0;
+            }
+            // 设置页数
+            this.setIndex(page, this.loop.speed);
+        },
+        /**
+         * 名称: 开始自动播放
+         * 作用: 如果当前 config 里开启了 loop 则会调 autoLoop 函数
+         */
+        doAutoLoop: function() {
+            if (this.loop.enabled === false) return;
+            this.loopTimer = setTimeout(this.autoLoop.bind(this), this.loop.time + this.loop.speed);
+        },
+        /**
+         * 名称: 自动播放
+         * 作用: 如果当前 config 里开启了 loop 则会调 nextPage 函数
+         */
+        autoLoop: function() {
+            if (this.loop.enabled === false) return;
+            this.prevPage();
+            this.loopTimer = setTimeout(this.autoLoop.bind(this), this.loop.time + this.loop.speed);
+        },
+        /**
+         * 名称: 清除自动播放
+         * 作用: 清除自动播放的定时器
+         */
+        clearLoop: function() {
+            if (this.loopTimer) clearTimeout(this.loopTimer);
+        },
+        /**
+         * 名称: 销毁
+         * 作用: 销毁掉所有绑定事件，并且清除所有设定样式，结束自动播放
+         */
         destroy: function() {
             this.$el.removeClass("slider");
             this.$pnl.removeClass("slider-pnl");
@@ -120,10 +252,15 @@
                 "mouseup": Slider.onEnd
             });
             $(window).off("resize", Slider.resetSize);
+            this.clearLoop();
         }
     }
 
     Slider.prototype.events = {
+        /**
+         * 名称: 开始拖动
+         * 作用: 记录当前的时间、位置、并且标记现在正处于拖动状态，暂停自动播放
+         */
         onStart: function(e) {
             e.preventDefault();
             var pageX = e.pageX !== undefined ? e.pageX : e.touches[0].pageX;
@@ -131,7 +268,14 @@
             this.startDate = new Date();
             this.startX = util.getX(this.$pnl);
             this.isMove = true;
+            // 取消自动播放
+            this.clearLoop();
         },
+        /**
+         * 名称: 拖动 ing
+         * 作用: 根据记录时间、位置，将 slider 跟随手指移动到具体位置
+         * 其他: 如果不处于拖动状态，则不会执行内部逻辑
+         */
         onMove: function(e) {
             if (!this.isMove) return;
             e.preventDefault();
@@ -147,7 +291,13 @@
 
             this.pageX = pageX;
         },
+        /**
+         * 名称: 拖动结束
+         * 作用: 1: 矫正位置; 2: 矫正边界; 3: 快划翻页; 4: 继续自动播放; 5: 更新 indicator 的位置; 6: 取消拖动状态
+         * 其他: 如果不处于拖动状态，则不会执行内部逻辑
+         */
         onEnd: function(e) {
+            if (!this.isMove) return;
             var self = this;
             var x = util.getX(this.$pnl);
             var right = this.singleWidth * (this.$li.length - 1) * -1 // 右边界
@@ -187,13 +337,18 @@
                 "transition": "transform 300ms"
             });
 
-            if (this.indicators.show === true) {
-                self.setIndicatorsActive();
-            }
-
-            this.page = page;
+            // 继续自动播放
+            this.doAutoLoop();
+            // 更新 indicators acitve 样式
+            this.setIndicatorsActive();
+            // 取消拖动状态
             this.isMove = false;
         },
+        /**
+         * 名称: 重设大小
+         * 作用: 浏览器改变大小时，重调大小，
+         * 其他: 控制了节流
+         */
         resetSize: function() {
             var self = this;
             this.resetTimer = setTimeout(function() {
@@ -208,11 +363,21 @@
     }
 
     var util = {
+        /**
+         * 名称: 获取 traslateX
+         * 作用: 获取目标的 traslateX 值
+         * return: translateX (int)
+         */
         getX: function($target) {
             return parseInt($target.css("transform").slice(12)) || 0;
         },
+        /**
+         * 名称: 补 0
+         * 作用: 如果数字小于 0, 则在前面补个 0
+         * return: num (stirng)
+         */
         plusZero: function(num) {
-            return num < 10 ? "0" + num : num;
+            return num < 10 ? "0" + num : "" + num;
         }
     }
 
