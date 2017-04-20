@@ -357,17 +357,17 @@
             return "success"
         },
         destroy: function() {
-            this.$parent.off({
-                "touchstart": List.events.onStart,
-                "touchmove": List.events.onMove,
-                "touchend": List.events.onEnd,
-                "touchcancel": List.events.onEnd,
-                "mousedown": List.events.onStart
-            });
-            $('body').off({
-                "mousemove": List.events.onMove,
-                "mouseup": List.events.onEnd
-            });
+            // this.$parent.off({
+            //     "touchstart": List.onStart,
+            //     "touchmove": List.onMove,
+            //     "touchend": List.onEnd,
+            //     "touchcancel": List.onEnd,
+            //     "mousedown": List.onStart
+            // });
+            // $('body').off({
+            //     "mousemove": List.onMove,
+            //     "mouseup": List.onEnd
+            // });
             this.$parent.remove();
         }
     }
@@ -383,7 +383,7 @@
             var pageY = e.pageY || e.touches[0].pageY;
             this.pageY = pageY;
             this.startDate = new Date();
-            this.startY = util.getY(this.$el) - this.defalutY;
+            this.startY = (util.getY(this.$el) - this.defalutY) || 0;
             this.currIndex = this.getIndex();
             this.isMove = true;
         },
@@ -412,6 +412,7 @@
         onEnd: function(e) {
             e.preventDefault();
             e.stopPropagation();
+            if (!this.isMove) return false;
             var self = this;
             var $target = this.$el;
             var $li = $target.find("li");
@@ -470,8 +471,6 @@
             });
 
             this.isMove = false;
-
-            console.log(final);
 
             // 发布事件
             self.timer = setTimeout(function() {
@@ -748,19 +747,6 @@
     }
 
     var util = {
-        /**
-         * 名称: 获取目标
-         * 作用: 获取 $list 正确的 $target
-         */
-        getTarget: function(e) {
-            var $target = $(e.target);
-            if ($target.is(".scroll-pnl")) {
-                $target = $target.find(".list");
-            } else if ($target.is(".item")) {
-                $target = $target.parent();
-            }
-            return $target;
-        },
         /**
          * 名称: 获取 translateY 数值
          * 作用: 获取 translateY 数值，如果没有就是 0
