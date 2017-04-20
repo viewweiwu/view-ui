@@ -20,7 +20,7 @@ textarea {
 @font-face {
   font-family: "iconfont";
   src: url('../iconfont/iconfont.eot?t=1491995928113');
-  src: url('../iconfont/iconfont.eot?t=1491995928113#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../iconfont/iconfont.woff?t=1491995928113') format('woff'), /* chrome, firefox */ url('../iconfont/iconfont.ttf?t=1491995928113') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/ url('../iconfont/iconfont.svg?t=1491995928113#iconfont') format('svg');
+  src: url('../iconfont/iconfont.eot?t=1491995928113#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../iconfont/iconfont.woff?t=1491995928113') format('woff'), /* chrome, firefox */ url('../iconfont/iconfont.ttf?t=1491995928113') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/ url('../iconfont/iconfont.svg?t=1491995928113#iconfont') format('svg')
   
   /* IE9*/
   /* iOS 4.1- */
@@ -31,16 +31,29 @@ textarea {
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .link {
   width: 100%;
   height: 100%;
   color: inherit;
   display: inherit;
-  flex-direction: inherit;
-  align-items: inherit;
-  justify-content: inherit;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: inherit;
+      -ms-flex-direction: inherit;
+          flex-direction: inherit;
+  -webkit-box-align: inherit;
+  -webkit-align-items: inherit;
+      -ms-flex-align: inherit;
+          align-items: inherit;
+  -webkit-box-pack: inherit;
+  -webkit-justify-content: inherit;
+      -ms-flex-pack: inherit;
+          justify-content: inherit;
   cursor: pointer;
 }
 .link i {
