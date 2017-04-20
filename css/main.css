@@ -1212,6 +1212,7 @@ select {
   border-top: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd;
   border-color: #66ccff;
+  background-color: #f0faff;
   position: absolute;
   pointer-events: none;
 }
@@ -1372,32 +1373,39 @@ select {
 }
 .slider .indicators {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  height: 0.66666667rem;
+  z-index: 1;
   position: relative;
 }
+.slider .indicators.number .item {
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: transparent;
+}
+.slider .indicators.number .item.active {
+  color: #66ccff;
+  background-color: transparent;
+}
+.slider .indicators .indicators-list {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
 .slider .indicators .item {
-  width: 0.2rem;
-  height: 0.2rem;
-  margin: 0.2rem 0.1rem;
+  margin: 0.1rem;
+  padding: 0.1rem;
   border-radius: 50%;
   overflow: hidden;
-  border: 1px solid #dddddd;
   background-color: rgba(0, 0, 0, 0.5);
+  -webkit-transition: background 300ms;
+          transition: background 300ms;
+  float: left;
 }
 .slider .indicators .item.active {
   background-color: #66ccff;
-  border-color: #66ccff;
 }
 html,
 body {

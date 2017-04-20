@@ -31,6 +31,7 @@
   border-top: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd;
   border-color: #66ccff;
+  background-color: #f0faff;
   position: absolute;
   pointer-events: none;
 }
