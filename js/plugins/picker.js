@@ -209,8 +209,6 @@
         }
     }
 
-
-
     function List(data, picker, type) {
         this.$container = picker.$container; // 最外层容器啦
         this.$picker = picker.$el;
@@ -496,6 +494,7 @@
         this.selectValue = opts.value || "value";
         this.selectList = opts.list || "children";
         this.formatStr = opts.formatStr || "yyyy-MM-dd hh:mm:ss";
+        this.hasHeaders = opts.hasHeaders === false ? false : true;
         this.split = "-";
         this.list = [];
         this.data = [];
@@ -512,6 +511,8 @@
             this.getData();
             // 创建元素
             this.createEl();
+            // 创建头部
+            this.createHeader();
             // 创建 picker
             this.createPicker();
             // 绑定事件
@@ -523,6 +524,7 @@
             this.onCancelBtnClick = picker.events.onCancelBtnClick.bind(this);
             this.onConfirmBtnClick = picker.events.onConfirmBtnClick.bind(this);
             this.preventDefault = picker.events.preventDefault.bind(this);
+            this.setTargetData = picker.setTargetData.bind(this);
             this.show = picker.show.bind(this);
             this.close = picker.close.bind(this);
             this.createEl = picker.createEl.bind(this);
@@ -535,8 +537,14 @@
             this.$target.on({
                 "focus": this.onTargetFocus.bind(this),
             });
-            this.$cancelBtn.on("tap", this.onCancelBtnClick.bind(this));
-            this.$confirmBtn.on("tap", this.onConfirmBtnClick.bind(this));
+            this.$cancelBtn.on({
+                "tap": this.onCancelBtnClick.bind(this),
+                "click": this.onCancelBtnClick.bind(this)
+            });
+            this.$confirmBtn.on({
+                "tap": this.onConfirmBtnClick.bind(this),
+                "click": this.onConfirmBtnClick.bind(this)
+            });
             this.$el.on("touchstart", this.preventDefault.bind(this));
             this.$content.on("change", ".list", this.onListChange.bind(this));
         },
@@ -580,10 +588,12 @@
                     data["year"] = this.getYearData();
                     data["month"] = this.getMonthData();
                     data["day"] = this.getDayData(this.start.getFullYear(), 1); // 默认 1 月份
+                    this.headers = ["年", "月", "日"];
                     break;
                 case "time":
                     data["hour"] = this.getHourData();
                     data["minute"] = this.getMinuteData();
+                    this.headers = ["时", "分"];
                     break;
                 case "datetime":
                     data["year"] = this.getYearData();
@@ -591,9 +601,24 @@
                     data["day"] = this.getDayData(this.start.getFullYear(), 1); // 默认 1 月份
                     data["hour"] = this.getHourData();
                     data["minute"] = this.getMinuteData();
+                    this.headers = ["年", "月", "日", "时", "分"];
                     break;
             }
             this.data = data;
+        },
+        createHeader: function() {
+            if (!this.hasHeaders) return;
+            var html = '';
+            var $headers;
+            html += '<div class="headers">';
+            $.each(this.headers || [], function(i, obj) {
+                html += '<div class="item">' + obj + '</div>';
+            });
+            html += '<div>';
+
+            $headers = $(html);
+            this.$content.before($headers);
+            this.$headers = $headers;
         },
         getYearData: function() {
             var startYear = this.start.getFullYear();
@@ -701,10 +726,6 @@
 
             // 将值赋值到文本框
             this.setTargetData();
-        },
-        setTargetData: function() {
-            this.$target.val(this.getText());
-            this.$target.data("data-value", this.getValue());
         },
         getValue: function() {
             var date = new Date();

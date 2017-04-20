@@ -51,6 +51,22 @@
                 }
             }
         }
+        .headers {
+            top: @size;
+            width: 100%;
+            height: @size * 2 / 3;
+            line-height: @size * 2 / 3;
+            .borderBottom();
+            z-index: 1;
+            background-color: #fff;
+            .flexCenter();
+            position: absolute;
+            .item {
+                flex: 1;
+                font-size: @big;
+                .flexCenter();
+            }
+        }
         .content {
             width: 100%;
             display: flex;
