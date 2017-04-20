@@ -20,16 +20,18 @@
         width: 100%;
         .flexCenter();
         position: relative;
+        .indicators-pnl {
+            
+        }
         .item {
             width: @space;
             height: @space;
             margin: @space @space / 2;
             .radius();
-            .border();
             background-color: @bg-dark;
+            transition: background 300ms;
             &.active {
                 background-color: @mainColor;
-                border-color: @mainColor;
             }
         }
     }

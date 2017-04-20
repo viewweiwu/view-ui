@@ -79,7 +79,7 @@
             return html;
         },
         setIndicatorsActive: function() {
-            this.$i.find(".item").eq(this.getIndex()).addClass("active").siblings(".acitve").removeClass(".active");
+            this.$i.find(".item").eq(this.getIndex()).addClass("active").siblings(".active").removeClass("active");
         },
         bind: function() {
             this.$el.on({
@@ -97,7 +97,7 @@
         },
         getIndex: function() {
             var result = "";
-            var y = util.getX(this.$el) * -1;
+            var y = util.getX(this.$pnl) * -1;
             var index = Math.round(y / this.singleWidth);
 
             return index;
@@ -188,7 +188,7 @@
             });
 
             if (this.indicators.show === true) {
-                this.setIndicatorsActive();
+                self.setIndicatorsActive();
             }
 
             this.page = page;
