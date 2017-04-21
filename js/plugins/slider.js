@@ -61,6 +61,8 @@
             this.initStyle();
             // 创建下面的小点点
             this.createIndicators();
+            // 跳到第一页
+            this.setIndex(0);
             // 事件绑定
             this.bind();
             // 是否需要循环？
