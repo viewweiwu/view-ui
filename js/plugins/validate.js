@@ -1,7 +1,7 @@
 (function($) {
     function Validate($target) {
         this.$form = $target;
-        this.inputArr = this.$form.find('input[data-validate]'); //找到所有绑定validate的input
+        this.inputArr = this.$form.find('*[data-validate]'); //找到所有绑定validate的input
         this.ruleArr = []; //data-validate检验规则
         this.inputValue = ''; //所有input的值
         this.labelText = ''; //该input对应的label的值
@@ -76,8 +76,10 @@
         },
         checkBind: function(rule, value, label, input, type) {
             var self = this;
-
-            if (type == 'text') {
+            if (type == "checkbox") {
+                testRule = input.is(':checked');
+                rule = 'checkbox';
+            } else {
                 value = $.trim(value); //去掉首尾空格
                 var testRule = value != ''; //是否通过,默认判断是否为空
                 /**
@@ -106,10 +108,6 @@
                 } else {
                     rule = 'empty';
                 }
-
-            } else if (type == "checkbox") {
-                testRule = input.is(':checked');
-                rule = 'checkbox';
             }
 
 
