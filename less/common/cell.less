@@ -126,6 +126,9 @@
             align-items: center;
             cursor: pointer;
             background-color: #fff;
+             &.bg-warning {
+                    background-color: @form-warning;
+                }
             &:last-child {
                 border-bottom: none;
             }
@@ -141,6 +144,7 @@
                     line-height: inherit;
                     font-size: inherit;
                     border:none;
+                    background-color: initial;
                 }
             }
             .label {
@@ -158,6 +162,7 @@
                 border: none;
                 font-size: inherit;
                 .flexLeft();
+                background-color: initial;
             }
             .right {
                 height: 100%;

@@ -6,8 +6,11 @@
   background-color: rgba(0, 0, 0, 0);
   font-size: 0.35rem;
   position: absolute;
-  transition: background-color 300ms;
-  transform: translateX(100%);
+  -webkit-transition: background-color 300ms;
+          transition: background-color 300ms;
+  -webkit-transform: translateX(100%);
+      -ms-transform: translateX(100%);
+          transform: translateX(100%);
   z-index: 2;
 }
 .picker .pnl {
@@ -17,11 +20,24 @@
   height: 6.6rem;
   background-color: #fff;
   position: absolute;
-  transform: translateY(100%);
-  transition: transform 300ms;
+  -webkit-transform: translateY(100%);
+      -ms-transform: translateY(100%);
+          transform: translateY(100%);
+  -webkit-transition: -webkit-transform 300ms;
+          transition: transform 300ms;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .picker .pnl .decorate {
   top: 3.4rem;
@@ -31,6 +47,7 @@
   border-top: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd;
   border-color: #66ccff;
+  background-color: #f0faff;
   position: absolute;
   pointer-events: none;
 }
@@ -39,12 +56,24 @@
   height: 1rem;
   line-height: 1rem;
   border-bottom: 1px solid #dddddd;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .picker .pnl .top .btn {
-  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   height: 100%;
   border: none;
   border-radius: 0;
@@ -63,43 +92,92 @@
   border-bottom: 1px solid #dddddd;
   z-index: 1;
   background-color: #fff;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   position: absolute;
 }
 .picker .pnl .headers .item {
-  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   font-size: 0.3rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .picker .pnl .content {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
 }
 .picker .pnl .content .scroll-pnl {
   width: 20%;
   height: 5.6rem;
   overflow: hidden;
-  transition: width 300ms;
+  -webkit-transition: width 300ms;
+          transition: width 300ms;
 }
 .picker .pnl .content .scroll-pnl .list {
   position: relative;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   overflow: hidden;
-  animation: pickerItemShow 300ms;
+  -webkit-animation: pickerItemShow 300ms;
+          animation: pickerItemShow 300ms;
 }
 .picker .pnl .content .scroll-pnl .list .item {
   width: 100%;
   height: 0.8rem;
   overflow: hidden;
   line-height: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+@-webkit-keyframes pickerItemShow {
+  0% {
+    opacity: .3;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 @keyframes pickerItemShow {
   0% {
