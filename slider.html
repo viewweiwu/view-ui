@@ -6,6 +6,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <link href="css/main.css" rel="stylesheet">
+    <style>
+        .point-list {
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .point-list .item {
+            width: 20px;
+            height: 20px;
+            margin-left: 20px;
+            border: 1px solid rgb(39, 185, 110);
+            background-color: rgba(39, 185, 110, 0.5);
+            transition: width, height 300ms;
+            float: left;
+        }
+        
+        .point-list .item.active {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .radio-group,
+        .btn-group {
+            margin: 0 .2rem;
+        }
+    </style>
 </head>
 
 <body>
@@ -27,6 +53,55 @@
                         <li><img src="./images/simple4.jpg" alt="" draggable="false"></li>
                     </ul>
                 </div>
+                <h2 class="title green">调整点位置</h2>
+                <div class="radio-group">
+                    <input type="radio" id="radio1" name="r" value="top">
+                    <label for="radio1">上</label>
+                    <input type="radio" id="radio2" name="r" value="bottom">
+                    <label for="radio2">下</label>
+                    <input type="radio" id="radio3" name="r" value="left">
+                    <label for="radio3">左</label>
+                    <input type="radio" id="radio4" name="r" value="right">
+                    <label for="radio4">右</label>
+                </div>
+                <div class="radio-group">
+                    <input type="radio" id="radio5" name="r" value="top-left">
+                    <label for="radio5">上左</label>
+                    <input type="radio" id="radio6" name="r" value="top-right">
+                    <label for="radio6">上右</label>
+                    <input type="radio" id="radio7" name="r" value="bottom-left">
+                    <label for="radio7">下左</label>
+                    <input type="radio" id="radio8" name="r" value="bottom-right">
+                    <label for="radio8">下右</label>
+                </div>
+                <div class="radio-group">
+                    <input type="radio" id="radio9" name="r" value="left-top">
+                    <label for="radio9">左上</label>
+                    <input type="radio" id="radio10" name="r" value="left-bottom">
+                    <label for="radio10">左下</label>
+                    <input type="radio" id="radio11" name="r" value="right-top">
+                    <label for="radio11">右上</label>
+                    <input type="radio" id="radio12" name="r" value="right-bottom">
+                    <label for="radio12">右下</label>
+                </div>
+                <div class="radio-group">
+                    <input type="radio" id="radio13" name="r" value="out top">
+                    <label for="radio13">外上</label>
+                    <input type="radio" id="radio14" name="r" value="out bottom">
+                    <label for="radio14">外下</label>
+                </div>
+                <h2 class="title red">翻页</h2>
+                <div class="btn-group">
+                    <button class="btn btn-prev">上一页</button>
+                    <button class="btn btn-next">下一页</button>
+                </div>
+                <h2 class="title blue">跟随页数联动</h2>
+                <div class="point-list">
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                </div>
             </div>
         </main>
     </div>
@@ -36,9 +111,6 @@
     <script src="js/plugins/slider.js"></script>
     <script>
         $(function() {
-            $("#slider").slider({
-                type: "fade"
-            });
             // var slider = $("#slider").data("slider");
             // slider.setIndicatorsPosition("top");
             // slider.setIndicatorsPosition("bottom");
@@ -51,6 +123,40 @@
             //     "animate": "fade"
             // });
             // slider.destroy();
+            var $slider = $("#slider");
+            var $pointList = $(".point-list");
+            var ctrl = "";
+            $slider.slider({
+                type: 'fade'
+            });
+            ctrl = $slider.data("slider");
+
+            // 监听 select 事件，就可以做到在第几页
+            $slider.on("select", function(e, i) {
+                toggleActive($pointList.find(".item"), i);
+            });
+
+            // 默认定位到第 0 页;
+            toggleActive($pointList.find(".item"), 0);
+
+            // toggle active class
+            function toggleActive($el, i) {
+                $el.eq(i).addClass("active").siblings(".active").removeClass("active");
+            }
+
+            $(".radio-group").on('change', "input", function() {
+                ctrl.setIndicatorsPosition($(this).val());
+            });
+
+            $(".btn-group").on('click', ".btn", function(e) {
+                var $target = $(e.target);
+                if ($target.is(".btn-prev")) {
+                    ctrl.prevPage();
+                } else {
+                    ctrl.nextPage();
+                }
+            });
+
         })
     </script>
 </body>

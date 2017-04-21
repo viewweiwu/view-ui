@@ -1,59 +1,57 @@
-.select-box {
-    background-color: @mainColor;
-    border-radius: @space / 2;
+@import "variable";
+.check-group,
+.radio-group {
     .border();
+    .radius(@space / 2);
+    display: inline-block;
     overflow: hidden;
-    .flexCenter();
-    .item {
-        padding: @space / 2 @space;
-        border-right: 1px solid @borderColor;
-        background-color: #fff;
-        &:last-child {
-            border-right: none;
-        }
-        &.active {
-            color: #fff;
-            background-color: @mainColor;
-        }
-    }
-}
-.checkbox {
-    overflow: hidden;
-    input[type='checkbox'] {
-        position: relative;
-        opacity: 0;
-    }
-    input[type='checkbox']:checked + label {
-        border-color: @mainColor;
-        background-color: @mainColor;
-    }
-    label {
-        display: inline-block;
-        width: @size / 2;
-        height: @size / 2;
-        .border();
-        color: #fff;
-        position: relative;
-        text-align: center;
-    }
-}
-.radiobox {
-    overflow: hidden;
+    input[type='checkbox'],
     input[type='radio'] {
         position: relative;
         opacity: 0;
+        display: none;
     }
+    input[type='checkbox']:checked + label,
     input[type='radio']:checked + label {
         border-color: @mainColor;
         background-color: @mainColor;
+        border-color: @mainColor;
+        color: #fff;
+    }
+    label {
+        padding: @space / 2 @space;
+        .borderLeft();
+        position: relative;
+        text-align: center;
+        background-color: #fff;
+        float: left;
+        &:nth-child(2) {
+            border: none;
+        }
+    }
+}
+.checkbox,
+.radiobox {
+    overflow: hidden;
+    input[type='checkbox'],
+    input[type='radio'] {
+        position: relative;
+        opacity: 0;
+        display: none;
+    }
+    input[type='checkbox']:checked + label,
+    input[type='radio']:checked + label {
+        border-color: @mainColor;
+        background-color: @mainColor;
+        color: #fff;
     }
     label {
         display: inline-block;
         width: @size / 2;
         height: @size / 2;
         .border();
-        color: #fff;
         position: relative;
         text-align: center;
+        color: transparent;
     }
 }

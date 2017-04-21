@@ -57,10 +57,12 @@
 
     Slider.prototype = {
         init: function() {
-            // 创建下面的小点点
-            this.createIndicators();
             // 初始化样式
             this.initStyle();
+            // 创建下面的小点点
+            this.createIndicators();
+            // 跳到第一页
+            this.setIndex(0);
             // 事件绑定
             this.bind();
             // 是否需要循环？
@@ -77,7 +79,6 @@
             this.initWidth();
             if (this.type === 'fade') {
                 this.$pnl.addClass('fade');
-                this.setIndex(0);
             }
         },
         /**
@@ -103,8 +104,8 @@
             this.$el.append(html);
             this.$i = this.$el.find(".indicators");
             this.indicators.type === "number" && this.$i.addClass("number");
-            this.setIndicatorsActive();
             this.setIndicatorsPosition(this.indicators.position);
+            this.setIndicatorsActive();
         },
         /**
          * 名称: 获取 indicators 的 html
@@ -138,6 +139,7 @@
          */
         setIndicatorsActive: function() {
             if (this.indicators.show !== true) return;
+            this.$el.trigger("select", this.getIndex());
             this.$i.find(".item").eq(this.getIndex()).addClass("active").siblings(".active").removeClass("active");
         },
         /**
@@ -360,8 +362,8 @@
          * return:  number (0 - max)
          */
         getIndex: function() {
+            var index = 0;
             if (this.type === 'fade') {
-                var index = 0;
                 $.each(this.$li, function(i, obj) {
                     var $target = $(obj);
                     if ($target.css("z-index") === "1") {
@@ -369,14 +371,11 @@
                         return false;
                     }
                 })
-                return index;
             } else {
-                var result = "";
                 var y = util.getX(this.$pnl) * -1;
-                var index = Math.round(y / this.singleWidth);
-                return index;
-
+                index = Math.round(y / this.singleWidth);
             }
+            return index;
         },
         /**
          * 名称: 跳转到的页数
@@ -384,6 +383,7 @@
          * 参数: i (0 - max), speed 执行翻页的时间 
          */
         setIndex: function(i, speed) {
+            this.clearLoop();
             if (this.type === 'fade') {
                 var index = i;
                 $.each(this.$li, function(i, obj) {
@@ -413,6 +413,7 @@
             }
             // 设置点的样式
             this.setIndicatorsActive();
+            this.doAutoLoop();
         },
         /**
          * 名称: 上一页
@@ -450,6 +451,7 @@
          */
         doAutoLoop: function() {
             if (this.loop.enabled === false) return;
+            this.clearLoop();
             this.loopTimer = setTimeout(this.autoLoop.bind(this), this.loop.time + this.loop.speed);
         },
         /**
@@ -473,26 +475,13 @@
          * 作用: 销毁掉所有绑定事件，并且清除所有设定样式，结束自动播放
          */
         destroy: function() {
-            this.$el.removeClass("slider");
-            this.$pnl.removeClass("slider-pnl");
-            this.$pnl.width("auto");
-            this.$li.width("auto");
-            this.$img.attr("draggable", true);
-            this.$el.off({
-                "touchstart": Slider.onStart,
-                "touchmove": Slider.onMove,
-                "touchend": Slider.onEnd,
-                "touchcancel": Slider.onEnd,
-                "mousedown": Slider.onStart
-            });
-            $(document).off({
-                "mousemove": Slider.onMove,
-                "mouseup": Slider.onEnd
-            });
-            $(window).off("resize", Slider.resetSize);
+            this.type !== 'fade' ? this.events.destroy.call(this) : this.fadeEvents.destroy.call(this);
             if (this.indicators.show === true) {
                 this.$i.remove();
             }
+            this.$el.removeClass("slider");
+            this.$pnl.removeClass("slider-pnl");
+            this.$img.attr("draggable", true);
             this.clearLoop();
         }
     }
@@ -515,6 +504,22 @@
                 "mouseup": this.events.onEnd.bind(this)
             });
             $(window).on("resize", this.events.resetSize.bind(this));
+        },
+        destroy: function() {
+            this.$el.off({
+                "touchstart": Slider.onStart,
+                "touchmove": Slider.onMove,
+                "touchend": Slider.onEnd,
+                "touchcancel": Slider.onEnd,
+                "mousedown": Slider.onStart
+            });
+            $(document).off({
+                "mousemove": Slider.onMove,
+                "mouseup": Slider.onEnd
+            });
+            $(window).off("resize", Slider.resetSize);
+            this.$pnl.width("auto");
+            this.$li.width("auto");
         },
         /**
          * 名称: 开始拖动
@@ -639,6 +644,25 @@
             $(document).on({
                 "mousemove": this.fadeEvents.onMove.bind(this),
                 "mouseup": this.fadeEvents.onEnd.bind(this)
+            });
+        },
+        destroy: function() {
+            this.$el.off({
+                "touchstart": Slider.onStart,
+                "touchmove": Slider.onMove,
+                "touchend": Slider.onEnd,
+                "touchcancel": Slider.onEnd,
+                "mousedown": Slider.onStart
+            });
+            $(document).off({
+                "mousemove": Slider.onMove,
+                "mouseup": Slider.onEnd
+            });
+            this.$pnl.removeClass('fade');
+            this.$li.css({
+                'z-index': 'auto',
+                'opacity': 'inherit',
+                'width': 'auto'
             });
         },
         onStart: function(e) {
