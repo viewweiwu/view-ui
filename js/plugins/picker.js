@@ -209,8 +209,6 @@
         }
     }
 
-
-
     function List(data, picker, type) {
         this.$container = picker.$container; // 最外层容器啦
         this.$picker = picker.$el;
@@ -357,17 +355,17 @@
             return "success"
         },
         destroy: function() {
-            this.$parent.off({
-                "touchstart": List.events.onStart,
-                "touchmove": List.events.onMove,
-                "touchend": List.events.onEnd,
-                "touchcancel": List.events.onEnd,
-                "mousedown": List.events.onStart
-            });
-            $('body').off({
-                "mousemove": List.events.onMove,
-                "mouseup": List.events.onEnd
-            });
+            // this.$parent.off({
+            //     "touchstart": List.onStart,
+            //     "touchmove": List.onMove,
+            //     "touchend": List.onEnd,
+            //     "touchcancel": List.onEnd,
+            //     "mousedown": List.onStart
+            // });
+            // $('body').off({
+            //     "mousemove": List.onMove,
+            //     "mouseup": List.onEnd
+            // });
             this.$parent.remove();
         }
     }
@@ -383,7 +381,7 @@
             var pageY = e.pageY || e.touches[0].pageY;
             this.pageY = pageY;
             this.startDate = new Date();
-            this.startY = util.getY(this.$el) - this.defalutY;
+            this.startY = (util.getY(this.$el) - this.defalutY) || 0;
             this.currIndex = this.getIndex();
             this.isMove = true;
         },
@@ -412,6 +410,7 @@
         onEnd: function(e) {
             e.preventDefault();
             e.stopPropagation();
+            if (!this.isMove) return false;
             var self = this;
             var $target = this.$el;
             var $li = $target.find("li");
@@ -495,6 +494,7 @@
         this.selectValue = opts.value || "value";
         this.selectList = opts.list || "children";
         this.formatStr = opts.formatStr || "yyyy-MM-dd hh:mm:ss";
+        this.hasHeaders = opts.hasHeaders === false ? false : true;
         this.split = "-";
         this.list = [];
         this.data = [];
@@ -511,6 +511,8 @@
             this.getData();
             // 创建元素
             this.createEl();
+            // 创建头部
+            this.createHeader();
             // 创建 picker
             this.createPicker();
             // 绑定事件
@@ -522,6 +524,7 @@
             this.onCancelBtnClick = picker.events.onCancelBtnClick.bind(this);
             this.onConfirmBtnClick = picker.events.onConfirmBtnClick.bind(this);
             this.preventDefault = picker.events.preventDefault.bind(this);
+            this.setTargetData = picker.setTargetData.bind(this);
             this.show = picker.show.bind(this);
             this.close = picker.close.bind(this);
             this.createEl = picker.createEl.bind(this);
@@ -534,8 +537,14 @@
             this.$target.on({
                 "focus": this.onTargetFocus.bind(this),
             });
-            this.$cancelBtn.on("tap", this.onCancelBtnClick.bind(this));
-            this.$confirmBtn.on("tap", this.onConfirmBtnClick.bind(this));
+            this.$cancelBtn.on({
+                "tap": this.onCancelBtnClick.bind(this),
+                "click": this.onCancelBtnClick.bind(this)
+            });
+            this.$confirmBtn.on({
+                "tap": this.onConfirmBtnClick.bind(this),
+                "click": this.onConfirmBtnClick.bind(this)
+            });
             this.$el.on("touchstart", this.preventDefault.bind(this));
             this.$content.on("change", ".list", this.onListChange.bind(this));
         },
@@ -579,10 +588,12 @@
                     data["year"] = this.getYearData();
                     data["month"] = this.getMonthData();
                     data["day"] = this.getDayData(this.start.getFullYear(), 1); // 默认 1 月份
+                    this.headers = ["年", "月", "日"];
                     break;
                 case "time":
                     data["hour"] = this.getHourData();
                     data["minute"] = this.getMinuteData();
+                    this.headers = ["时", "分"];
                     break;
                 case "datetime":
                     data["year"] = this.getYearData();
@@ -590,9 +601,24 @@
                     data["day"] = this.getDayData(this.start.getFullYear(), 1); // 默认 1 月份
                     data["hour"] = this.getHourData();
                     data["minute"] = this.getMinuteData();
+                    this.headers = ["年", "月", "日", "时", "分"];
                     break;
             }
             this.data = data;
+        },
+        createHeader: function() {
+            if (!this.hasHeaders) return;
+            var html = '';
+            var $headers;
+            html += '<div class="headers">';
+            $.each(this.headers || [], function(i, obj) {
+                html += '<div class="item">' + obj + '</div>';
+            });
+            html += '<div>';
+
+            $headers = $(html);
+            this.$content.before($headers);
+            this.$headers = $headers;
         },
         getYearData: function() {
             var startYear = this.start.getFullYear();
@@ -701,10 +727,6 @@
             // 将值赋值到文本框
             this.setTargetData();
         },
-        setTargetData: function() {
-            this.$target.val(this.getText());
-            this.$target.data("data-value", this.getValue());
-        },
         getValue: function() {
             var date = new Date();
             $.each(this.list, function(i, obj) {
@@ -746,19 +768,6 @@
     }
 
     var util = {
-        /**
-         * 名称: 获取目标
-         * 作用: 获取 $list 正确的 $target
-         */
-        getTarget: function(e) {
-            var $target = $(e.target);
-            if ($target.is(".scroll-pnl")) {
-                $target = $target.find(".list");
-            } else if ($target.is(".item")) {
-                $target = $target.parent();
-            }
-            return $target;
-        },
         /**
          * 名称: 获取 translateY 数值
          * 作用: 获取 translateY 数值，如果没有就是 0
