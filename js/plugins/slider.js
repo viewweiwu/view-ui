@@ -383,6 +383,7 @@
          * 参数: i (0 - max), speed 执行翻页的时间 
          */
         setIndex: function(i, speed) {
+            this.clearLoop();
             if (this.type === 'fade') {
                 var index = i;
                 $.each(this.$li, function(i, obj) {
@@ -412,6 +413,7 @@
             }
             // 设置点的样式
             this.setIndicatorsActive();
+            this.doAutoLoop();
         },
         /**
          * 名称: 上一页
@@ -449,6 +451,7 @@
          */
         doAutoLoop: function() {
             if (this.loop.enabled === false) return;
+            this.clearLoop();
             this.loopTimer = setTimeout(this.autoLoop.bind(this), this.loop.time + this.loop.speed);
         },
         /**
