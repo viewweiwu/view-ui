@@ -12,8 +12,9 @@
         this.loop = {
             enabled: true,
             time: 2000,
-            speed: 300
+            speed: this.type === 'fade' ? 1000 : 300
         }
+
 
         // 读取 opts 的 loop 配置
         if (opts.loop) {
@@ -33,7 +34,7 @@
         this.indicators = {
             show: true,
             position: "inset bottom-right",
-            type: "number"
+            type: "point"
         };
 
         // 读取 opts 的 indicators 配置
@@ -56,10 +57,10 @@
 
     Slider.prototype = {
         init: function() {
-            // 初始化宽度
-            this.initStyle();
             // 创建下面的小点点
             this.createIndicators();
+            // 初始化样式
+            this.initStyle();
             // 事件绑定
             this.bind();
             // 是否需要循环？
@@ -74,6 +75,10 @@
             this.$pnl.addClass("slider-pnl");
             this.$img.attr("draggable", false);
             this.initWidth();
+            if (this.type === 'fade') {
+                this.$pnl.addClass('fade');
+                this.setIndex(0);
+            }
         },
         /**
          * 名称: 初始化宽度
@@ -81,6 +86,7 @@
          * 其他: 计算出单个 width, 并作为单位 - singleWidth 
          */
         initWidth: function() {
+            if (this.type === 'fade') return;
             this.singleWidth = this.$el.width();
             this.$pnl.width(this.singleWidth * this.$li.length);
             this.$li.width(this.singleWidth);
@@ -144,7 +150,7 @@
             var list = position.split(" ");
             var style = {};
             var listStyle = {};
-            var changeListStyle = false;
+            var changeItemStyle = false;
             var size = $i.height() > $i.width() ? $i.width() : $i.height();
 
             var config = {
@@ -154,6 +160,13 @@
                     style.width = "100%";
                     style.height = size;
                     $i.prependTo(self.$el);
+                    listStyle = {
+                        'top': '50%',
+                        'left': '50%',
+                        'right': 'auto',
+                        'bottom': 'auto',
+                        'transform': 'translate(-50%, -50%)'
+                    }
                 },
                 left: function() {
                     style.top = 0;
@@ -161,6 +174,13 @@
                     style.width = size;
                     style.height = "100%";
                     style.position = 'absolute';
+                    listStyle = {
+                        'top': '50%',
+                        'left': '50%',
+                        'right': 'auto',
+                        'bottom': 'auto',
+                        'transform': 'translate(-50%, -50%)'
+                    }
                 },
                 right: function() {
                     style.top = 0;
@@ -169,6 +189,13 @@
                     style.width = size;
                     style.height = "100%";
                     style.position = 'absolute';
+                    listStyle = {
+                        'top': '50%',
+                        'left': '50%',
+                        'right': 'auto',
+                        'bottom': 'auto',
+                        'transform': 'translate(-50%, -50%)'
+                    }
                 },
                 bottom: function() {
                     style.top = 'auto';
@@ -177,81 +204,84 @@
                     style.width = "100%";
                     style.height = size;
                     $i.appendTo(self.$el);
+                    listStyle = {
+                        'top': '50%',
+                        'left': '50%',
+                        'right': 'auto',
+                        'bottom': 'auto',
+                        'transform': 'translate(-50%, -50%)'
+                    }
                 },
                 topLeft: function() {
                     this.top();
                     style.position = 'absolute';
                     listStyle = {
-                        'top': 'auto',
-                        'left': 'auto',
+                        'top': '0',
+                        'left': '0',
                         'transform': 'translate3d(0, 0, 0)'
                     };
-                    changeListStyle = true;
                 },
                 topRight: function() {
                     this.top();
                     style.position = 'absolute';
                     listStyle = {
-                        'top': 'auto',
+                        'top': '0',
                         'left': 'auto',
                         'right': '0',
                         'transform': 'translate3d(0, 0, 0)'
                     };
-                    changeListStyle = true;
                 },
                 leftTop: function() {
                     this.left();
                     style.position = 'absolute';
                     listStyle = {
-                        'top': '.5em',
-                        'left': '.5em',
+                        'top': '0',
+                        'left': '0',
                         'transform': 'translate3d(0, 0, 0)'
                     }
-                    changeListStyle = true;
                 },
                 leftBottom: function() {
                     this.left();
                     style.position = 'absolute';
                     listStyle = {
                         'top': 'auto',
-                        'left': '.5em',
-                        'bottom': '.5em',
+                        'left': '0',
+                        'bottom': '0',
                         'transform': 'translate3d(0, 0, 0)'
                     }
-                    changeListStyle = true;
                 },
                 rightTop: function() {
                     this.right();
                     style.position = 'absolute';
                     listStyle = {
-                        'top': '.5em',
-                        'left': '1em',
+                        'top': '0',
+                        'left': 'auto',
+                        'right': '0',
                         'transform': 'translate3d(0, 0, 0)'
                     }
-                    changeListStyle = true;
+                    changeItemStyle = true;
                 },
                 rightBottom: function() {
                     this.right();
                     style.position = 'absolute';
                     listStyle = {
                         'top': 'auto',
-                        'left': '1em',
+                        'left': 'auto',
                         'right': '0',
-                        'bottom': '.5em',
+                        'bottom': '0',
                         'transform': 'translate3d(0, 0, 0)'
                     }
-                    changeListStyle = true;
+                    changeItemStyle = true;
                 },
                 bottomLeft: function() {
                     this.bottom();
                     style.position = 'absolute';
                     listStyle = {
                         'top': 'auto',
-                        'left': 'auto',
+                        'left': '0',
                         'bottom': '0',
                         'transform': 'translate3d(0, 0, 0)'
                     };
-                    changeListStyle = true;
                 },
                 bottomRight: function() {
                     this.bottom();
@@ -263,7 +293,6 @@
                         'bottom': '0',
                         'transform': 'translate3d(0, 0, 0)'
                     };
-                    changeListStyle = true;
                 }
             }
 
@@ -316,27 +345,14 @@
             });
 
             $i.css(style);
-            if (changeListStyle) {
-                $i.find('.indicators-list').css(listStyle);
-            }
+            $i.find('.indicators-list').css(listStyle).find('.item')[changeItemStyle === true ? 'addClass' : 'removeClass']('right');
         },
         /**
-         * 名称: 绑定事件
-         * 作用: 被绑定的事件在 Slider.events 里面
+         * 名称: 事件绑定
+         * 作用: 根据不同的动画类型绑定不同的事件
          */
         bind: function() {
-            this.$el.on({
-                "touchstart": this.events.onStart.bind(this),
-                "touchmove": this.events.onMove.bind(this),
-                "touchend": this.events.onEnd.bind(this),
-                "touchcancel": this.events.onEnd.bind(this),
-                "mousedown": this.events.onStart.bind(this),
-            });
-            $(document).on({
-                "mousemove": this.events.onMove.bind(this),
-                "mouseup": this.events.onEnd.bind(this)
-            });
-            $(window).on("resize", this.events.resetSize.bind(this));
+            this.type !== 'fade' ? this.events.bind.call(this) : this.fadeEvents.bind.call(this);
         },
         /**
          * 名称: 获取页数
@@ -344,11 +360,23 @@
          * return:  number (0 - max)
          */
         getIndex: function() {
-            var result = "";
-            var y = util.getX(this.$pnl) * -1;
-            var index = Math.round(y / this.singleWidth);
+            if (this.type === 'fade') {
+                var index = 0;
+                $.each(this.$li, function(i, obj) {
+                    var $target = $(obj);
+                    if ($target.css("z-index") === "1") {
+                        index = $target.index();
+                        return false;
+                    }
+                })
+                return index;
+            } else {
+                var result = "";
+                var y = util.getX(this.$pnl) * -1;
+                var index = Math.round(y / this.singleWidth);
+                return index;
 
-            return index;
+            }
         },
         /**
          * 名称: 跳转到的页数
@@ -356,13 +384,33 @@
          * 参数: i (0 - max), speed 执行翻页的时间 
          */
         setIndex: function(i, speed) {
-            var final = i * this.singleWidth * -1;
-            speed = speed >= 0 ? speed : 0;
-            // 设置位置
-            this.$pnl.css({
-                "transform": "translate3d(" + final + "px, 0, 0)",
-                "transition": "transform " + speed + "ms"
-            });
+            if (this.type === 'fade') {
+                var index = i;
+                $.each(this.$li, function(i, obj) {
+                    var $target = $(obj);
+                    if (i === index) {
+                        $target.css({
+                            "z-index": 1,
+                            "opacity": 1,
+                            "transition": "opacity " + speed + "ms"
+                        });
+                    } else {
+                        $target.css({
+                            "z-index": 0,
+                            "opacity": 0,
+                            "transition": "opacity 0"
+                        });
+                    }
+                });
+            } else {
+                var final = i * this.singleWidth * -1;
+                speed = speed >= 0 ? speed : 0;
+                // 设置位置
+                this.$pnl.css({
+                    "transform": "translate3d(" + final + "px, 0, 0)",
+                    "transition": "transform " + speed + "ms"
+                });
+            }
             // 设置点的样式
             this.setIndicatorsActive();
         },
@@ -410,7 +458,7 @@
          */
         autoLoop: function() {
             if (this.loop.enabled === false) return;
-            this.prevPage();
+            this.nextPage();
             this.loopTimer = setTimeout(this.autoLoop.bind(this), this.loop.time + this.loop.speed);
         },
         /**
@@ -442,17 +490,39 @@
                 "mouseup": Slider.onEnd
             });
             $(window).off("resize", Slider.resetSize);
+            if (this.indicators.show === true) {
+                this.$i.remove();
+            }
             this.clearLoop();
         }
     }
 
     Slider.prototype.events = {
         /**
+         * 名称: slide 类型绑定事件
+         * 作用: 被绑定的事件在 Slider.events 里面
+         */
+        bind: function() {
+            this.$el.on({
+                "touchstart": this.events.onStart.bind(this),
+                "touchmove": this.events.onMove.bind(this),
+                "touchend": this.events.onEnd.bind(this),
+                "touchcancel": this.events.onEnd.bind(this),
+                "mousedown": this.events.onStart.bind(this),
+            });
+            $(document).on({
+                "mousemove": this.events.onMove.bind(this),
+                "mouseup": this.events.onEnd.bind(this)
+            });
+            $(window).on("resize", this.events.resetSize.bind(this));
+        },
+        /**
          * 名称: 开始拖动
          * 作用: 记录当前的时间、位置、并且标记现在正处于拖动状态，暂停自动播放
          */
         onStart: function(e) {
             e.preventDefault();
+            e.stopPropagation();
             var pageX = e.pageX !== undefined ? e.pageX : e.touches[0].pageX;
             this.pageX = pageX;
             this.startDate = new Date();
@@ -550,6 +620,63 @@
                 self.isMove = true;
                 self.events.onEnd.apply(self, [null]);
             }, 100);
+        }
+    }
+
+    Slider.prototype.fadeEvents = {
+        /**
+         * 名称: slide 类型绑定事件
+         * 作用: 被绑定的事件在 Slider.events 里面
+         */
+        bind: function() {
+            this.$el.on({
+                "touchstart": this.fadeEvents.onStart.bind(this),
+                "touchmove": this.fadeEvents.onMove.bind(this),
+                "touchend": this.fadeEvents.onEnd.bind(this),
+                "touchcancel": this.fadeEvents.onEnd.bind(this),
+                "mousedown": this.fadeEvents.onStart.bind(this),
+            });
+            $(document).on({
+                "mousemove": this.fadeEvents.onMove.bind(this),
+                "mouseup": this.fadeEvents.onEnd.bind(this)
+            });
+        },
+        onStart: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var pageX = e.pageX !== undefined ? e.pageX : e.touches[0].pageX;
+            this.pageX = pageX;
+            this.endPageX = pageX;
+            this.startDate = new Date();
+            this.isMove = true;
+            // 取消自动播放
+            this.clearLoop();
+        },
+        onMove: function(e) {
+            if (!this.isMove) return;
+            e.preventDefault();
+            e.stopPropagation();
+            var pageX = e.pageX !== undefined ? e.pageX : e.touches[0].pageX;
+
+            this.endPageX = pageX;
+        },
+        onEnd: function() {
+            if (!this.isMove) return;
+            var diffX = this.endPageX - this.pageX;
+            var direction = diffX > 0 ? 1 : -1; // 1: right, -1: left
+            var dateDiff = new Date - this.startDate;
+            var singleWidth = this.$pnl.width();
+
+            if (dateDiff < 150 && Math.abs(diffX) > singleWidth / 6) {
+                direction < 0 ? this.nextPage() : this.prevPage();
+            }
+
+            // 继续自动播放
+            this.doAutoLoop();
+            // 更新 indicators acitve 样式
+            this.setIndicatorsActive();
+            // 取消拖动状态
+            this.isMove = false;
         }
     }
 

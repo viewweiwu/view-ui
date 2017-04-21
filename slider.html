@@ -36,13 +36,21 @@
     <script src="js/plugins/slider.js"></script>
     <script>
         $(function() {
-            $("#slider").slider();
-            var slider = $("#slider").data("slider");
+            $("#slider").slider({
+                type: "fade"
+            });
+            // var slider = $("#slider").data("slider");
+            // slider.setIndicatorsPosition("top");
+            // slider.setIndicatorsPosition("bottom");
+            // slider.setIndicatorsPosition("left");
+            // slider.setIndicatorsPosition("right");
+            // slider.setIndicatorsPosition("top-right");
+            // slider.setIndicatorsPosition("top-left");
             // $("#slider").data("slider").autoLoop();
             // $("#slider").slider({
             //     "animate": "fade"
             // });
-            // $("#slider").data("slider").destroy();
+            // slider.destroy();
         })
     </script>
 </body>
