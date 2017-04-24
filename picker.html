@@ -19,8 +19,8 @@
         </header>
         <main class="main">
             <div class="content">
+                <h2 class="title">默认</h2>
                 <div class="list-cell cell-list field-list">
-                    <h2 class="title">默认</h2>
                     <div class="field">
                         <label class="label" for="fruit">水果：</label>
                         <input type="text" class="input" id="fruit" placeholder="请选择喜欢的水果">
@@ -32,8 +32,13 @@
                     </div>
                     <h2 class="title blue">级联设置默认值</h2>
                     <div class="field">
-                        <label class="label" for="city">城市：</label>
+                        <label class="label" for="city2">城市：</label>
                         <input type="text" class="input" id="city2" placeholder="请选择城市">
+                    </div>
+                    <h2 class="title">自由组合</h2>
+                    <div class="field">
+                        <label class="label" for="fruit2">水果</label>
+                        <input type="text" class="input" id="fruit2" placeholder="请选择两种你喜欢的水果">
                     </div>
                 </div>
             </div>
@@ -47,20 +52,22 @@
     <script src="js/cityData.js"></script>
     <script>
         $(function() {
+            var fruits = [{
+                text: "菠萝",
+                value: "22"
+            }, {
+                text: "火龙果",
+                value: "10"
+            }, {
+                text: "苹果",
+                value: "6"
+            }, {
+                text: "西瓜",
+                value: "23"
+            }];
+
             $("#fruit").picker({
-                data: [{
-                    text: "菠萝",
-                    value: "22"
-                }, {
-                    text: "火龙果",
-                    value: "10"
-                }, {
-                    text: "苹果",
-                    value: "6"
-                }, {
-                    text: "西瓜",
-                    value: "23"
-                }]
+                data: fruits
             });
             $("#city").picker({
                 data: cityData,
@@ -78,6 +85,22 @@
             $("#city2").data("picker").setValue("浙江 - 杭州 - 江干区");
             // 下面这个也可以调用
             // $("#city2").data("picker").setText("海南 - 五指山");
+
+            $("#fruit2").flexpicker({
+                slots: [{
+                    textAlign: "right",
+                    data: fruits
+                }, {
+                    divider: true,
+                    data: [{
+                        text: " - ",
+                        value: " - "
+                    }]
+                }, {
+                    textAlign: "left",
+                    data: fruits
+                }]
+            });
         });
     </script>
 </body>

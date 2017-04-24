@@ -9,7 +9,7 @@
         this.selectList = opts.list || "children";
         this.data = opts.data;
         this.list = [];
-        this.split = " - ";
+        this.divider = " - ";
         this.init();
     }
 
@@ -106,8 +106,8 @@
             $.each(this.list, function(i, obj) {
                 if (obj.getIndex() === 0 && obj.getText === self.defaultText) return true;
                 if (i !== 0) {
-                    text += self.split;
-                    value += self.split;
+                    text += self.divider;
+                    value += self.divider;
                 }
                 text += obj.getText();
                 value += obj.getValue();
@@ -117,7 +117,7 @@
         },
         setData: function(d, type) {
             var self = this;
-            var list = d.split(this.split);
+            var list = d.split(this.divider);
             var data = this.data;
 
             // 循环分割成 list 的数据
@@ -290,6 +290,7 @@
             this.$el.css("transform", "translate3d(0, " + final + "px, 0)");
         },
         bind: function() {
+            if (this.type === "divider") return;
             this.$parent.on({
                 "touchstart": this.events.onStart.bind(this),
                 "touchmove": this.events.onMove.bind(this),
@@ -353,6 +354,13 @@
                 }
             }
             return "success"
+        },
+        setTextAlign: function(align) {
+            align === "left" && (align = "flex-start");
+            align === "right" && (align = "flex-end");
+            this.$el.find("li").css({
+                "justify-content": align === undefined ? "center" : align
+            });
         },
         destroy: function() {
             // this.$parent.off({
@@ -495,7 +503,7 @@
         this.selectList = opts.list || "children";
         this.formatStr = opts.formatStr || "yyyy-MM-dd hh:mm:ss";
         this.hasHeaders = opts.hasHeaders === false ? false : true;
-        this.split = "-";
+        this.divider = "-";
         this.list = [];
         this.data = [];
         this.init();
@@ -677,8 +685,11 @@
             return;
         },
         addList: function(data, type) {
-            this.list.push(new List(data, this, type));
-            this.resetListSize();
+            // 如果列表数据为空，则不添加
+            if (data && data.length) {
+                this.list.push(new List(data, this, type));
+                this.resetListSize();
+            }
         },
         createPicker: function() {
             for (var key in this.data) {
@@ -687,7 +698,7 @@
             }
         },
         setData: function(d, type) {
-            var list = d.split(this.split);
+            var list = d.split(this.divider);
             var data = this.data;
 
             // 寻找第一层
@@ -767,6 +778,85 @@
         }
     }
 
+    function FlexPicker($target, opts) {
+        opts = opts || {};
+        this.$container = $(".container"); // 最外层容器啦
+        this.$target = $target;
+        this.id = opts.id ? opts.id : $target.attr("id");
+        this.selectText = opts.text || "text";
+        this.selectValue = opts.value || "value";
+        this.slots = opts.slots;
+        this.list = [];
+        this.divider = "";
+        this.dividerList = [];
+        this.init();
+    }
+
+    FlexPicker.prototype = {
+        init: function() {
+            // 拷贝 picker 的大部分 function ！！！！
+            this.copyFunction();
+            this.createEl();
+            this.initSlots();
+            this.bind();
+        },
+        copyFunction: function() {
+            var picker = Picker.prototype;
+            this.onTargetFocus = picker.events.onTargetFocus.bind(this);
+            this.onCancelBtnClick = picker.events.onCancelBtnClick.bind(this);
+            this.onConfirmBtnClick = picker.events.onConfirmBtnClick.bind(this);
+            this.preventDefault = picker.events.preventDefault.bind(this);
+            this.setTargetData = picker.setTargetData.bind(this);
+            this.show = picker.show.bind(this);
+            this.close = picker.close.bind(this);
+            this.createEl = picker.createEl.bind(this);
+            this.initStyle = picker.initStyle.bind(this);
+            this.setValue = picker.setValue.bind(this);
+            this.setText = picker.setText.bind(this);
+            this.addList = DatePicker.prototype.addList.bind(this);
+            this.events = picker.events;
+        },
+        initSlots: function() {
+            var self = this;
+            $.each(this.slots, function(i, obj) {
+                if (obj.divider === true) {
+                    self.addList(obj.data, "divider");
+                    self.dividerList += 1;
+                } else {
+                    self.addList(obj.data);
+                    self.list[i].setTextAlign(obj.textAlign);
+                }
+            });
+        },
+        bind: function() {
+            this.$target.on("focus", this.events.onTargetFocus.bind(this));
+            this.$cancelBtn.on({
+                "tap": this.events.onCancelBtnClick.bind(this),
+                "click": this.events.onCancelBtnClick.bind(this)
+            });
+            this.$confirmBtn.on({
+                "tap": this.events.onConfirmBtnClick.bind(this),
+                "click": this.events.onConfirmBtnClick.bind(this)
+            });
+            this.$el.on("touchstart", this.events.preventDefault.bind(this));
+        },
+        resetListSize: function() {
+            var self = this;
+            $.each(this.list, function(i, obj) {
+                obj.$parent.width(self.calcListWidth(obj, self.list.length, self.dividerList.length));
+            });
+
+        },
+        calcListWidth: function(obj, listLength, dividerListLength) {
+            var normalListLength = listLength - dividerListLength;
+            if (obj.type === "divider") {
+                return "15%";
+            } else {
+                return (100 - dividerListLength * 15) / normalListLength + "%";
+            }
+        }
+    }
+
     var util = {
         /**
          * 名称: 获取 translateY 数值
@@ -788,6 +878,13 @@
         return this.each(function(i, obj) {
             var $target = $(obj);
             $target.data("picker", new DatePicker($target, options));
+        });
+    }
+
+    $.fn.flexpicker = function(options) {
+        return this.each(function(i, obj) {
+            var $target = $(obj);
+            $target.data("picker", new FlexPicker($target, options));
         });
     }
 })(Zepto);
