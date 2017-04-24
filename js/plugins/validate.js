@@ -3,32 +3,22 @@
         this.$form = $target;
         this.inputArr = this.$form.find('*[data-validate]'); //找到所有绑定validate的input
         this.ruleArr = []; //data-validate检验规则
-        this.inputValue = ''; //所有input的值
-        this.labelText = ''; //该input对应的label的值
-        this.labelType = ''; //该input对应的type类型
+        this.testRule = true; //验证结果
         this.init();
     }
 
     Validate.prototype = {
         init: function() {
             this.getCheckResult();
-            this.onfocus();
-
         },
         getCheckResult: function() {
             var result = this.setCheck();
             return result;
         },
-        onfocus: function($target) {
-            var self = this;
-            $.each(self.inputArr, function(i, iObj) {
-                var $target = $(iObj);
-                if ($target.parents('.bg-warning')) {
-                    $target.bind('focus', function() {
-                        $target.parents('.bg-warning').removeClass('bg-warning');
-                    });
-                }
-            })
+        onfocus: function($input) {
+            $input.bind('focus', function() {
+                $(this).parents('.bg-warning').removeClass('bg-warning');
+            });
         },
         setCheck: function() {
             //返回验证结果
@@ -37,16 +27,13 @@
             $.each(self.inputArr, function(i, iObj) {
                 var $target = $(iObj);
                 self.ruleArr = $target.data('validate').split(','); //找到这些input框的验证值 
-                self.inputValue = $target.val(); //找到这些input框的值
-                self.labelText = $target.data("label") || ''; //找到这些input框的label值
-                self.labelType = $target.attr('type'); //找到这些input框的类型
                 if (self.ruleArr[0] != '') {
                     $.each(self.ruleArr, function(j, jObj) {
-                        checkResult = self.checkBind(jObj, self.inputValue, self.labelText, $target, self.labelType);
-                        return !checkResult ? false : true;
+                        checkResult = self.checkBind(jObj, $target);
+                        return checkResult;
                     })
                 }
-                return !checkResult ? false : true;
+                return checkResult;
             })
             return checkResult
         },
@@ -56,7 +43,6 @@
                 position: "center",
                 content: tip,
             });
-            return false;
         },
         setTips: function(status, label) {
             validateTips = {
@@ -71,66 +57,96 @@
                 confpwd: '两次输入的密码不一致',
                 postCode: '请输入正确的邮编',
                 checkbox: '请同意' + label,
+                orCheck: '请正确输入' + label,
+                idCard: '请正确输入您的身份证号码',
+                custom: label,
             }
             return validateTips[status];
         },
-        checkBind: function(rule, value, label, input, type) {
-            var self = this;
-            if (type == "checkbox") {
-                testRule = input.is(':checked');
-                rule = 'checkbox';
+        check: function(rule, $input) {
+            var self = this,
+                inputValue = $input.val(), //找到这些input框的值
+                labelType = $input.attr('type'), //找到这些input框的类型
+                result = true; //验证结果
+            //先做类型判断
+            if (labelType == "checkbox") {
+                return $input.is(':checked');
             } else {
-                value = $.trim(value); //去掉首尾空格
-                var testRule = value != ''; //是否通过,默认判断是否为空
-                /**
-                 * 文本格式验证正则表达式
-                 */
+                inputValue = $.trim(inputValue); //去掉首尾空格
+                var result = true;
+                //文本格式验证正则表达式
                 var regex = {
                     email: /^(\w)+(\W\w+)*@(\w)+(\-\w+)*((\.\w+)+)$/, // email
-                    phone: /^\(?\d{2,3}[- ]?\d{1,3}\)?[- ]?\d{3,4}[- ]?\d{4}$/, // 手机号码
+                    phone: /^1[3|4|5|7|8]\d{9}$/, // 手机号码
                     tell: /\d{3}-\d{8}|\d{4}-\d{7,8}/, // 固话
                     number: /^[\-\+]?((\d+)([\.,](\d+))?|([\.,](\d+))+)$/, // 数字
                     integer: /^[\-\+]?((\d+))$/, // 整数
                     url: /^[a-zA-z]+:\/\/(\w+(-\w+)*)(\.(\w+(-\w+)*))*/, // 链接
                     password: /^[\w~!@#$%^&*()_+{}:"<>?\-=[\];\',.\/]{6,30}$/, // 密码
-                    postCode: /^\d{6}$/ //邮编
+                    postCode: /^\d{6}$/, //邮编
+                    idCard1: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/, //15位身份证
+                    idCard2: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/, //18位身份证
                 };
-                if (testRule) {
-                    if (rule.search(/confpwd/) > -1) {
-                        var ele = /confpwd\((.*)\)/.exec(rule)[1];
-                        testRule = value == $(ele).val();
-                        rule = 'confpwd';
-                    } else if (rule.search(/empty/) > -1) {
-                        rule = 'empty';
-                    } else {
-                        testRule = regex[rule].test(value);
-                    }
+
+                if (rule.search(/confpwd/) > -1) {
+                    var ele = /confpwd\((.*)\)/.exec(rule)[1];
+                    return inputValue == $(ele).val();
+                } else if (rule == 'empty') {
+                    return inputValue != '';;
+                } else if (rule == 'idCard') {
+                    result = regex['idCard1'].test(inputValue) || regex['idCard2'].test(inputValue);
+                    return result;
+                } else if (rule == 'custom') {
+                    var customRule = RegExp($input.data('rule'));
+                    result = customRule ? customRule.test(inputValue) : true;
+                    return result;
                 } else {
-                    rule = 'empty';
+                    result = regex[rule].test(inputValue);
+                    return result;
                 }
             }
 
 
-            if (testRule == false) {
-                self.showTip(rule, label);
-                input.parents('.field').addClass('bg-warning');
+        },
+        checkBind: function(rule, $input) {
+            var self = this,
+                ruleOption = rule.split('|'), //或判断
+                labelText = $input.data("label") || '', //找到这些input框的label值
+                orResult = true,
+                testRule = true;
+
+            if (ruleOption.length > 1) {
+                var count = 0;
+                $.each(ruleOption, function(i, iObj) {
+                    orResult = self.check(iObj, $input);
+                    if (orResult) {
+                        count++; //通过验证则累加
+                    }
+                })
+                rule = 'orCheck';
+                testRule = count > 0 ? true : false;
+            } else {
+                testRule = self.check(rule, $input);
+                if (rule.search(/confpwd/) > -1) {
+                    rule = 'confpwd';
+                }
+            }
+
+            if (!testRule) {
+                self.showTip(rule, labelText);
+                $input.parents('.field').addClass('bg-warning');
+                self.onfocus($input);
                 return false;
             } else {
-                input.parents('.field').removeClass('bg-warning');
-                return true
+                $input.parents('.field').removeClass('bg-warning');
+                return true;
             }
         },
     }
 
     //触发
     $.fn.validate = function() {
-        return this.each(function(i, obj) {
-            var $target = $(obj);
-            $target.data("validate", new Validate($target));
-        });
-
-    }
-    $.fn.getResult = function() {
-        return this.data("validate").getCheckResult();
+        var Vali = new Validate($(this));
+        return Vali.getCheckResult();
     }
 })(Zepto);
