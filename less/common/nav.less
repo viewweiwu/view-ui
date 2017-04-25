@@ -1,0 +1,73 @@
+@import "variable";
+
+.nav-container {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    position: absolute;
+    overflow: hidden;
+    .nav-bg {
+        width: 100%;
+        height: 100%;
+        background-color: @bg-dark;
+    }
+    .nav-content {
+        top: 0;
+        left: 0;
+        height: @size;
+        margin-right: @size;
+        position: absolute;
+        background-color: @green;
+        .overScroll();
+        .nav-list {
+            width: 200%;
+            height: 100%;
+            line-height: @size;
+            .item {
+                padding: 0 @space;
+                height: 100%;
+                float: left;
+            }
+        }
+    }
+    .nav-ctrl {
+        top: 0;
+        right: 0;
+        width: @size;
+        height: 100%;
+        max-height: @size;
+        .borderLeft();
+        border-color: #fff;
+        position: absolute;
+        .btn {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: @green;
+            i {
+                margin: 0;
+                color: #fff;
+            }
+        }
+    }
+    .nav-dropdown {
+        top: @size;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        color: @defaultFont;
+        background-color: #fff;
+        position: absolute;
+        .item {
+            width: 33.333%;
+            padding: @space 0;
+            float: left;
+            text-align: center;
+            &.active {
+                color: @green;
+            }
+        }
+    }
+}

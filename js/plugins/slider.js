@@ -138,8 +138,8 @@
          * 作用: 取得当前页数，并给当前页数对应的 indicators 添加 active 样式
          */
         setIndicatorsActive: function() {
-            if (this.indicators.show !== true) return;
             this.$el.trigger("select", this.getIndex());
+            if (this.indicators.show !== true) return;
             this.$i.find(".item").eq(this.getIndex()).addClass("active").siblings(".active").removeClass("active");
         },
         /**

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="index.html" class="link left">
+                <i class="iconfont">&#xe660;</i>
+            </a>
+            <div class="center">滚动 nav</div>
+            <span class="right"></span>
+        </header>
+        <main class="main">
+            <div class="content">
+            </div>
+            <div class="nav">
+                <div class="item">定海神针</div>
+                <div class="item">九齿钉耙</div>
+                <div class="item">三尖两刃刀</div>
+                <div class="item">火尖枪</div>
+                <div class="item">乾坤袋</div>
+                <div class="item">玲珑宝塔</div>
+                <div class="item">金刚琢</div>
+            </div>
+        </main>
+    </div>
+    <script src="js/rem.js "></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/plugins/nav.js "></script>
+    <script>
+        $(function() {
+            $(".nav").nav()
+        })
+    </script>
+</body>
+
+</html>

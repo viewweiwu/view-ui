@@ -47,7 +47,9 @@
             <div class="content">
                 <div id="slider">
                     <ul>
-                        <li><img src="./images/simple.jpg" alt=""></li>
+                        <li><img src="./images/simple.jpg" alt="">
+                            <div class="slider-text"></div>
+                        </li>
                         <li><img src="./images/simple2.jpg" alt=""></li>
                         <li><img src="./images/simple3.jpg" alt=""></li>
                         <li><img src="./images/simple4.jpg" alt="" draggable="false"></li>
@@ -128,12 +130,16 @@
             var $pointList = $(".point-list");
             var ctrl = "";
             $slider.slider({
-                type: 'fade'
+                indicators: {
+                    show: true,
+                    position: "out bottom"
+                }
             });
             ctrl = $slider.data("slider");
 
-            // 监听 select 事件，就可以做到在第几页
+            // 监听 select 事件，就可以知道在第几页
             $slider.on("select", function(e, i) {
+                console.log(i);
                 toggleActive($pointList.find(".item"), i);
             });
 
