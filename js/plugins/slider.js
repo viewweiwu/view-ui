@@ -446,6 +446,21 @@
             this.setIndex(page, this.loop.speed);
         },
         /**
+         * 名称: 跳到具体某一页
+         * 作用: 把当前的页数定位到下一页，如果到末页则定向到第一页
+         */
+        jumpPage: function(page) {
+            // 最后一页就滚到第一页
+            if (page > this.$li.length - 1) {
+                page = 0;
+            }
+            if (page < 0) {
+                page = this.$li.length - 1;
+            }
+            // 设置页数
+            this.setIndex(page, this.loop.speed);
+        },
+        /**
          * 名称: 开始自动播放
          * 作用: 如果当前 config 里开启了 loop 则会调 autoLoop 函数
          */
