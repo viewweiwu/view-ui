@@ -4,22 +4,25 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: @size;
     color: #fff;
     position: absolute;
     overflow: hidden;
     .nav-bg {
         width: 100%;
         height: 100%;
+        opacity: 0;
         background-color: @bg-dark;
+        transition: opacity 300ms;
     }
     .nav-content {
         top: 0;
         left: 0;
         height: @size;
         margin-right: @size;
-        position: absolute;
         background-color: @green;
+        z-index: 1;
+        position: absolute;
         .overScroll();
         .nav-list {
             width: 200%;
@@ -29,6 +32,11 @@
                 padding: 0 @space;
                 height: 100%;
                 float: left;
+                cursor: pointer;
+                &.active {
+                    text-decoration:line-through;
+                    font-weight: bold;
+                }
             }
         }
     }
@@ -40,6 +48,7 @@
         max-height: @size;
         .borderLeft();
         border-color: #fff;
+        z-index: 1;
         position: absolute;
         .btn {
             width: 100%;
@@ -59,14 +68,19 @@
         overflow: hidden;
         color: @defaultFont;
         background-color: #fff;
+        padding: @space;
         position: absolute;
+        transform: translateY(-200);
+        transition: transform 300ms;
         .item {
             width: 33.333%;
             padding: @space 0;
             float: left;
             text-align: center;
+            cursor: pointer;
             &.active {
                 color: @green;
+                background-color: lighten(@green, 40%);
             }
         }
     }
