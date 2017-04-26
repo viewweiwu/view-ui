@@ -465,7 +465,7 @@
          * 作用: 如果当前 config 里开启了 loop 则会调 autoLoop 函数
          */
         doAutoLoop: function() {
-            if (this.loop.enabled === false) return;
+            if (this.loop.enabled === false || this.isMove) return;
             this.clearLoop();
             this.loopTimer = setTimeout(this.autoLoop.bind(this), this.loop.time + this.loop.speed);
         },
@@ -474,7 +474,7 @@
          * 作用: 如果当前 config 里开启了 loop 则会调 nextPage 函数
          */
         autoLoop: function() {
-            if (this.loop.enabled === false) return;
+            if (this.loop.enabled === false || this.isMove) return;
             this.nextPage();
             this.loopTimer = setTimeout(this.autoLoop.bind(this), this.loop.time + this.loop.speed);
         },
@@ -726,7 +726,7 @@
          * return: translateX (int)
          */
         getX: function($target) {
-            return parseInt($target.css("transform").slice(12)) || 0;
+            return parseInt($target[0].style.transform.slice(12)) || 0;
         },
         /**
          * 名称: 补 0

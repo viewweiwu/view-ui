@@ -863,7 +863,7 @@
          * 作用: 获取 translateY 数值，如果没有就是 0
          */
         getY: function($target) {
-            return parseInt($target.css("transform").slice(17)) || 0;
+            return parseInt($target[0].style.transform.slice(17)) || 0;
         }
     }
 
