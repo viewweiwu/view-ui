@@ -2,14 +2,13 @@
     function Nav($el, opts) {
         opts = opts || {};
         this.$el = $el;
+        this.$scroll = opts.scrollEl;
         this.init();
     }
 
     Nav.prototype = {
         init: function() {
-            // 获取数据
-            this.getData();
-            // 创建标签
+            // 创建元素
             this.createEl();
             // 初始化样式
             this.initStyle();
@@ -17,50 +16,40 @@
             this.bind();
         },
         /**
-         * 名称: 获取数据
-         * 作用: 根据传入标签生成数据
-         */
-        getData: function() {
-            var data = [];
-            $.each(this.$el.find(".item"), function(i, obj) {
-                data.push($(obj).text());
-            });
-            this.data = data;
-        },
-        /**
-         * 名称: 创建标签
-         * 作用: 根据数据生成标签
+         * 名称: 创建元素
+         * 作用: 生成 dom 元素
          */
         createEl: function() {
-            var $html = $(this.getHtml(this.data));
+            var $html = $(this.getHtml());
             this.$el.after($html);
+
+            this.$list = $html.find(".nav-list");
+            this.$dropdown = $html.find(".nav-dropdown");
+            this.$btn = $html.find(".btn");
+            this.$content = $html.find(".nav-content")
+            this.$btn = $html.find(".nav-ctrl");
+            this.$bg = $html.find(".nav-bg")
+
+
+            this.$list.append(this.$el.find(".item").clone(true));
+            this.$dropdown.append(this.$el.find(".item").clone(true));
+
             this.$el.remove();
             this.$el = $html;
-            this.$btn = this.$el.find(".btn");
-            this.$content = this.$el.find(".nav-content")
-            this.$list = this.$content.find(".nav-list");
-            this.$dropdown = this.$el.find(".nav-dropdown");
-            this.$btn = this.$el.find(".nav-ctrl");
-            this.$bg = this.$el.find(".nav-bg")
         },
         /**
-         * 名称: 创建html
-         * 作用: 根据数据生成html
+         * 名称: 创建 html
+         * 作用: 生成基础 html
          */
-        getHtml: function(data) {
+        getHtml: function() {
             var html = "";
             var listHtml = "";
-
-            $.each(data || [], function(i, obj) {
-                listHtml += '<div class="item">' + obj + '</div>';
-            });
 
             html +=
                 '<div class="nav-container">' +
                 '<div class="nav-bg"></div>' +
                 '<div class="nav-content">' +
                 '<div class="nav-list">' +
-                listHtml +
                 '</div>' +
                 '</div>' +
                 '<div class="nav-ctrl">' +
@@ -69,7 +58,6 @@
                 '</button>' +
                 '</div>' +
                 ' <div class="nav-dropdown">' +
-                listHtml +
                 '</div>' +
                 '</div>';
 
@@ -92,12 +80,12 @@
 
             $.each(this.$list.find(".item"), function(i, obj) {
                 var $target = $(obj);
+                $target.width("auto"); // 先初始化到自动
                 $target.width($target.width() + 1);
                 width += $target.width();
             });
 
             this.$list.width(width);
-
             this.$content.width(this.$el.width() - this.$btn.width());
         },
         /**
@@ -108,7 +96,8 @@
             this.$btn.on("click", this.events.onBtnClick.bind(this));
             this.$content.on("click", ".item", this.events.onItemClick.bind(this));
             this.$dropdown.on("click", ".item", this.events.onItemClick.bind(this));
-            $(window).on("resize", this.onWindowResize.bind(this));
+            this.$scroll.on("scroll", this.events.onScroll.bind(this));
+            $(window).on("resize", this.events.onWindowResize.bind(this));
         },
         /**
          * 名称: 打开面板
@@ -142,18 +131,40 @@
         toggle: function() {
             this.isOpen === true ? this.close() : this.open();
         },
-        scrollTo: function(index) {
+        /**
+         * 名称: 设置 nav 滚动条的具体位置
+         * 作用: 将 nav 滚动到 item === index 的位置
+         * @param index
+         */
+        contentScrollTo: function(index) {
             var totalWidth = -this.$el.width() / 3;
             var $item = this.$content.find(".item");
             for (var i = 0; i < index; i++) {
                 totalWidth += $item.eq(i).width();
             }
             this.$content.scrollLeft(totalWidth);
-            console.log(totalWidth);
+            this.setActive(index);
         },
+        /**
+         * 名称: 设置 acitve
+         * 作用: 给予 nav 的 item 的 index 为 i 的元素 acitve 样式
+         * @param i
+         */
         setActive: function(i) {
             this.$content.find(".item").eq(i).addClass("active").siblings(".active").removeClass("active");
             this.$dropdown.find(".item").eq(i).addClass("active").siblings(".active").removeClass("active");
+        },
+        /**
+         * 
+         */
+        scrollTo: function($el) {
+            var $target = this.$scroll.find("[data-id=" + $el.data("href") + "]");
+            if ($target.length) {
+                var top = $target.position().top;
+                var scrollTop = this.$scroll.scrollTop();
+                var height = this.$el.height();
+                this.$scroll.scrollTop(top + scrollTop - height);
+            }
         }
     }
 
@@ -167,11 +178,27 @@
         },
         onItemClick: function(e) {
             var $target = $(e.target);
-            this.setActive($target.index());
-            this.scrollTo($target.index());
+            this.contentScrollTo($target.index());
+            this.scrollTo($target);
             this.close();
         },
-        onWindowResize: function() {}
+        onWindowResize: function() {
+            setTimeout(function() {
+                this.initStyle();
+            }.bind(this), 100)
+        },
+        onScroll: function() {
+            $.each(this.$scroll.find("[data-id]") || [], function(i, obj) {
+                var $target = $(obj);
+                var top = $target.position().top;
+                var scrollTop = this.$scroll.scrollTop();
+                var height = this.$el.height();
+                var final = top + scrollTop - height;
+                if (final < scrollTop && scrollTop < final + $target.outerHeight()) {
+                    this.contentScrollTo(i);
+                }
+            }.bind(this));
+        }
     }
 
 
