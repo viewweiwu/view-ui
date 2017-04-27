@@ -15,7 +15,6 @@
             speed: this.type === 'fade' ? 1000 : 300
         }
 
-
         // 读取 opts 的 loop 配置
         if (opts.loop) {
             var l = opts.loop;
@@ -33,8 +32,9 @@
         // 下面的小点点
         this.indicators = {
             show: true,
-            position: "inset bottom-right",
-            type: "point"
+            position: "out bottom",
+            type: "point",
+            canClick: false
         };
 
         // 读取 opts 的 indicators 配置
@@ -104,6 +104,7 @@
             this.$el.append(html);
             this.$i = this.$el.find(".indicators");
             this.indicators.type === "number" && this.$i.addClass("number");
+            this.indicators.canClick === true && this.$i.find(".item").css("cursor", "pointer")
             this.setIndicatorsPosition(this.indicators.position);
             this.setIndicatorsActive();
         },
@@ -355,6 +356,10 @@
          */
         bind: function() {
             this.type !== 'fade' ? this.events.bind.call(this) : this.fadeEvents.bind.call(this);
+            if (this.indicators.canClick === true) {
+                this.$i.on("click", ".item", this.events.onIndicatorsClick.bind(this));
+                this.$i.on("tap", ".item", this.events.onIndicatorsClick.bind(this));
+            }
         },
         /**
          * 名称: 获取页数
@@ -640,6 +645,10 @@
                 self.isMove = true;
                 self.events.onEnd.apply(self, [null]);
             }, 100);
+        },
+        onIndicatorsClick: function(e) {
+            var $target = $(e.target);
+            this.jumpPage($(e.target).index());
         }
     }
 
