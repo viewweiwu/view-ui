@@ -162,8 +162,9 @@
             if ($target.length) {
                 var top = $target.position().top;
                 var scrollTop = this.$scroll.scrollTop();
-                var height = this.$el.height();
-                this.$scroll.scrollTop(top + scrollTop - height);
+                var height = this.$list.height();
+                var final = top + scrollTop - height;
+                this.$scroll.scrollTop(final);
             }
         }
     }
@@ -177,29 +178,36 @@
             this.toggle();
         },
         onItemClick: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             var $target = $(e.target);
             this.contentScrollTo($target.index());
             this.scrollTo($target);
             this.close();
         },
         onWindowResize: function() {
-            setTimeout(function() {
+            this.resizeTimer && clearTimeout(this.resizeTimer);
+            this.resizeTimer = setTimeout(function() {
                 this.initStyle();
-            }.bind(this), 100)
+            }.bind(this), 100);
         },
-        onScroll: function() {
-            $.each(this.$scroll.find("[data-id]") || [], function(i, obj) {
-                var $target = $(obj);
-                var top = $target.position().top;
-                var scrollTop = this.$scroll.scrollTop();
-                var height = this.$el.height();
-                var final = top + scrollTop - height;
-                if (final < scrollTop && scrollTop < final + $target.outerHeight()) {
-                    this.contentScrollTo(i);
-                    // console.log(~~final, scrollTop, $target.outerHeight(), $target.text().trim());
-                    return false;
-                }
-            }.bind(this));
+        onScroll: function(e) {
+            e.stopPropagation();
+            this.scrollTimer && clearTimeout(this.scrollTimer);
+            this.scrollTimer = setTimeout(function() {
+                $.each(this.$scroll.find("[data-id]") || [], function(i, obj) {
+                    var $target = $(obj);
+                    var top = $target.position().top;
+                    var scrollTop = this.$scroll.scrollTop();
+                    var height = this.$el.height();
+                    var final = top + scrollTop - height;
+                    if (final < scrollTop && scrollTop < final + $target.outerHeight()) {
+                        this.contentScrollTo(i);
+                        // console.log(~~final, scrollTop, $target.outerHeight(), $target.text().trim());
+                        return false;
+                    }
+                }.bind(this));
+            }.bind(this), 10);
         }
     }
 
