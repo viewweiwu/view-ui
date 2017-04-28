@@ -8,15 +8,12 @@
     position: absolute;
     animation: showMsg 300ms;
     z-index: 2;
+    .flexCenter();
     .pnl {
-        top: 50%;
-        left: 50%;
         width: 80%;
         border-radius: @space / 2;
         background-color: #fff;
-        transform-origin: 0 0;
-        transform: translate(-50%, -50%);
-        position: absolute;
+        transform: translate3d(0, 0, 0);
         overflow: hidden;
         animation: showMsgPnl 300ms;
         .content {
@@ -53,12 +50,12 @@
 }
 @keyframes showMsgPnl {
     0% {
-        transform: scale(.5) translate3d(-50%, -50%, 0);
+        transform: scale(.5) translate3d(0, 0, 0);
     }
     50% {
-        transform: scale(1.1) translate3d(-50%, -50%, 0);
+        transform: scale(1.1) translate3d(0, 0, 0);
     }
     100% {
-        transform: scale(1) translate3d(-50%, -50%, 0);
+        transform: scale(1) translate3d(0, 0, 0);
     }
 }
