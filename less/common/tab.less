@@ -1,10 +1,24 @@
 @import "variable";
 .tab {
+    width: 100%;
     height: @size;
     display: flex;
     font-size: @big;
     background-color: #fff;
     position: relative;
+
+    &.in-top {
+        top: 0;
+        left: 0;
+        position: absolute;
+    }
+
+    &.in-bottom {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+    }
+
     &.blue {
         .item {
             &:hover,

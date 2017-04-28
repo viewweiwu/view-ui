@@ -196,6 +196,8 @@
                 var final = top + scrollTop - height;
                 if (final < scrollTop && scrollTop < final + $target.outerHeight()) {
                     this.contentScrollTo(i);
+                    // console.log(~~final, scrollTop, $target.outerHeight(), $target.text().trim());
+                    return false;
                 }
             }.bind(this));
         }

@@ -10,194 +10,80 @@
         .main>.content {
             padding-top: 1rem;
         }
+        
+        .main>.content>.item {
+            height: 10rem;
+            background-color: #decefe;
+            overflow: hidden;
+        }
+        
+        .main>.content>.item:nth-child(3n) {
+            background-color: #d0fcdd;
+            height: 15rem;
+        }
+        
+        .main>.content>.item:nth-child(3n + 1) {
+            background-color: #fff8d6;
+            height: 5rem;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <header class="header">
-            <div href="index.html" class="link left">
+            <a href="index.html" class="link left">
                 <i class="iconfont">&#xe660;</i>
-            </div>
+            </a>
             <div class="center">滚动 nav</div>
             <span class="right"></span>
         </header>
         <main class="main">
             <div class="content">
-                <h2 class="title blue" data-id="item1">定海神针</h2>
-                <div class="cell-list card-list card-list-grid grid2">
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple2.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple3.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small btn-full btn-blue">赞</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple4.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">最多允许两行文本</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
+                <div class="item" data-id="item1">
+                    <h2 class="title">定海神针</h2>
                 </div>
-                <h2 class="title blue" data-id="item2">九齿钉耙</h2>
-                <div class="cell-list card-list card-list-grid grid2">
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple2.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple3.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small btn-full btn-blue">赞</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple4.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">最多允许两行文本</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
+                <div class="item" data-id="item2">
+                    <h2 class="title">九齿钉耙</h2>
                 </div>
-                <h2 class="title blue" data-id="item3">三尖两刃刀</h2>
-                <div class="cell-list card-list card-list-grid grid2">
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple2.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple3.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small btn-full btn-blue">赞</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple4.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">最多允许两行文本</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
+                <div class="item" data-id="item3">
+                    <h2 class="title">三尖两刃刀</h2>
                 </div>
-                <h2 class="title blue" data-id="item4">火尖枪</h2>
-                <div class="cell-list card-list card-list-grid grid2">
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple2.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple3.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small btn-full btn-blue">赞</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple4.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">最多允许两行文本</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
+                <div class="item" data-id="item4">
+                    <h2 class="title">火尖枪</h2>
                 </div>
-                <h2 class="title blue" data-id="item5">乾坤袋</h2>
-                <div class="cell-list card-list card-list-grid grid2">
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple2.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple3.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small btn-full btn-blue">赞</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="image">
-                            <img src="./images/simple4.jpg" alt="">
-                        </div>
-                        <div class="info">view 2017-04-31</div>
-                        <div class="content">最多允许两行文本</div>
-                        <div class="ctrls">
-                            <div href="javascript:void(0)" class="btn btn-small">赞</div>
-                            <div href="javascript:void(0)" class="btn btn-small">评论</div>
-                        </div>
-                    </div>
+                <div class="item" data-id="item5">
+                    <h2 class="title">乾坤袋</h2>
+                </div>
+                <div class="item" data-id="item6">
+                    <h2 class="title">玲珑宝塔</h2>
+                </div>
+                <div class="item" data-id="item7">
+                    <h2 class="title">金刚琢</h2>
+                </div>
+                <div class="item" data-id="item8">
+                    <h2 class="title">降魔杵</h2>
+                </div>
+                <div class="item" data-id="item9">
+                    <h2 class="title">紫金巨锤</h2>
+                </div>
+                <div class="item" data-id="item10">
+                    <h2 class="title">芭蕉扇</h2>
+                </div>
+                <div class="item" data-id="item11">
+                    <h2 class="title">定风珠</h2>
+                </div>
+                <div class="item" data-id="item12">
+                    <h2 class="title">混元一气袖</h2>
+                </div>
+                <div class="item" data-id="item13">
+                    <h2 class="title">幌金绳</h2>
+                </div>
+                <div class="item" data-id="item14">
+                    <h2 class="title">混天绫</h2>
+                </div>
+                <div class="item" data-id="item15">
+                    <h2 class="title">风火轮</h2>
                 </div>
             </div>
             <div class="nav">
@@ -214,6 +100,8 @@
                 <div class="item" data-href="item11">定风珠</div>
                 <div class="item" data-href="item12">混元一气袖</div>
                 <div class="item" data-href="item13">幌金绳</div>
+                <div class="item" data-href="item14">混天绫</div>
+                <div class="item" data-href="item15">风火轮</div>
             </div>
         </main>
     </div>
