@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="index.html" class="link left">
+                <i class="iconfont">&#xe660;</i>
+            </a>
+            <div class="center">
+                倒计时
+            </div>
+            <span class="right"></span>
+        </header>
+        <main class="main">
+            <div class="content">
+                <div class="js-countdown">
+                    <button class="btn btn-full btn-red js-countdown-item" data-start="2017/5/3 15:16:00" data-end="2017/5/3 15:59:00"></button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/rem.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/plugins/countdown.js"></script>
+    <script>
+        $('.js-countdown').countdown();
+    </script>
+</body>
+
+</html>
