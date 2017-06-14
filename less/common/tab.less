@@ -29,7 +29,7 @@
         &.border {
             .item {
                 &:hover,
-                &.active {
+                &.active  {
                     &:after {
                         background-color: @blue;
                     }
@@ -102,19 +102,46 @@
     }
     &.border {
         .item {
+            background-color: transparent;
             &:hover,
             &.active {
                 color: @defaultFont;
-                background-color: #fff;
+                background-color: transparent;
                 &:after {
                     content: "";
                     left: 0;
                     bottom: 0;
                     width: 100%;
                     height: @space / 2;
-                    background-color: @orange;
                     position: absolute;
                 }
+            }
+            &:after {
+                content: "";
+                left: 50%;
+                bottom: 0;
+                width: 0%;
+                height: @space / 3;
+                transition: 300ms;
+                position: absolute;
+                background-color: @white;
+            }
+        }
+    }
+    &.group {
+        .border(@white);
+        .radius(@space);
+        overflow: hidden;
+        color: @bg-light;
+        background-color: transparent;
+        .item {
+            &:after {
+                display: none;
+            }
+            &:hover,
+            &.active {
+                color: @mainColor;
+                background-color: @white;
             }
         }
     }
@@ -122,13 +149,13 @@
         .item {
             &:hover,
             &.active {
-                color: @orange;
+                color: @white;
                 background-color: transparent;
             }
         }
     }
     &.dark {
-        color: #fff;
+        color: @white;
         background-color: @bg-dark;
         .item {
             background-color: transparent;
@@ -150,13 +177,13 @@
             }
         }
     }
-    &.tab-small {
+    &.tab-mini {
         height: @size * 2 / 3; 
         font-size: @normal;
         &.border {
             .item {
                 &:hover,
-                &.active {
+                &.active{
                     &:after {
                         height: @space / 4;
                     }
@@ -168,6 +195,7 @@
                 flex-direction: column;
                 i {
                     font-size: .9em;
+                    line-height: 1;
                 }
                 p {
                     font-size: .5em;
@@ -179,16 +207,19 @@
         .f1();
         .flexCenter();
         position: relative;
+        transition: 300ms;
+        cursor: pointer;
         &:hover,
         &.active {
             color: #fff;
-            background-color: @orange;
+            background-color: @mainColor;
             cursor: pointer;
         }
         &.has-icon {
             flex-direction: column;
             i {
                 font-size: 1.2em;
+                line-height: 1;
             }
             p {
                 font-size: .8em;

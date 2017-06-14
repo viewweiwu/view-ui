@@ -5,6 +5,19 @@
         border-top: 1px solid @borderColor;
         border-bottom: 1px solid @borderColor;
     }
+    &.label-text {
+        .cell {
+            .label {
+                width: auto;
+                .f1();
+            }
+            .text {
+                .f1();
+                padding: 0;
+                justify-content: flex-end;
+            }
+        }
+    }
     &.card-list {
         margin: 0;
         .card {
@@ -126,7 +139,7 @@
             align-items: center;
             cursor: pointer;
             background-color: #fff;
-             &.bg-warning {
+            &.bg-warning {
                     background-color: @form-warning;
                 }
             &:last-child {
@@ -140,7 +153,7 @@
                 .content {
                     flex: 1;
                     height: @size * 1.5;
-                    padding: @space / 2;
+                    padding: 0 @space / 2;
                     line-height: inherit;
                     font-size: inherit;
                     border:none;
@@ -153,6 +166,9 @@
                 .flexLeft();
                 &.auto {
                     width: auto;
+                }
+                .icon {
+                    margin-right: @space / 2;
                 }
             }
             .input {
@@ -167,6 +183,53 @@
             .right {
                 height: 100%;
                 .flexRight();
+                .icon {
+                    margin-left: @space / 2;
+                }
+            }
+        }
+    }
+    &.space-list {
+        .cell,
+        .field {
+            border: none;
+            position: relative;
+            &.full-border {
+                &:after {
+                    width: 100%;
+                }
+            }
+            &:after {
+                content: "";
+                bottom: 0;
+                right: 0;
+                width: e('calc(100% - 1rem)');
+                height: 1px;
+                background-color: @borderColor;
+                position: absolute;
+            }
+            &:last-child {
+                &:after {
+                    display: none;
+                }
+            }
+            .label {
+                .iconfont {
+                    font-size: 1.7em;
+                    margin: 0 @space;
+                    margin-top: @space / 2;
+                    vertical-align: middle;
+                }
+            }
+            .text {
+                color: @grayFont;
+            }
+        }
+        &.cell-image-text {
+            .cell {
+                &:after {
+                width: e('calc(100% - 1.3rem)');
+                }
             }
         }
     }
@@ -175,6 +238,7 @@
             height: auto;
             padding: @space;
             align-items: flex-start;
+            -webkit-tap-highlight-color: transparent;
             .image {
                 width: @size;
                 height: @size;
@@ -201,6 +265,7 @@
         }
     }
     .cell {
+        max-width: 100%;
         min-height: @size;
         border-bottom: 1px solid @borderColor;
         font-size: @big;
@@ -208,8 +273,8 @@
         justify-content: space-between;
         padding: 0 @space;
         align-items: center;
-        cursor: pointer;
-        background-color: #fff;
+        background-color: @white;
+        overflow: hidden;
         &:last-child {
             border-bottom: none;
         }
@@ -220,6 +285,7 @@
         }
         .text {
             .f1();
+            // max-width: e('calc(100% - 1.5rem)');
             padding: @space;
             height: 100%;
             .flexLeft();
@@ -227,6 +293,9 @@
         .right {
             height: 100%;
             .flexRight();
+        }
+        .icon {
+            margin-right: @space / 2;
         }
     }
 }
