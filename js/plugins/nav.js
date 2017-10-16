@@ -202,6 +202,7 @@
       this.scrollTimer && clearTimeout(this.scrollTimer);
       this.scrollTimer = setTimeout(function() {
         $.each(this.$scroll.find("[data-id]") || [], function(i, obj) {
+          $('.center').html(new Date().getTime());
           var $target = $(obj);
           var top = $target.position().top;
           var scrollTop = this.$scroll.scrollTop();
@@ -213,7 +214,7 @@
             return false;
           }
         }.bind(this));
-      }.bind(this), 50);
+      }.bind(this), 30);
     }
   }
 
