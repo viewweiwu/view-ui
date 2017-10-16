@@ -137,7 +137,6 @@
      * @param index
      */
     contentScrollTo: function(index) {
-      console.log(index);
       var totalWidth = -this.$el.width() / 3;
       var $item = this.$content.find(".item");
       for (var i = 0; i < index; i++) {
