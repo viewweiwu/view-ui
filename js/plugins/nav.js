@@ -207,9 +207,12 @@
           var scrollTop = this.$scroll.scrollTop();
           var height = this.$el.height();
           var final = top + scrollTop - height;
-          if (final < scrollTop && scrollTop < final + $target.outerHeight()) {
+          if (final <= scrollTop && scrollTop < final + $target.outerHeight()) {
             this.contentScrollTo(i);
             // console.log(~~final, scrollTop, $target.outerHeight(), $target.text().trim());
+            return false;
+          } else if (scrollTop === 0) {
+            this.contentScrollTo(0);
             return false;
           }
         }.bind(this));
